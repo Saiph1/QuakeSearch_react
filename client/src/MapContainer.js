@@ -2,33 +2,33 @@ import {React, useState, useEffect} from 'react';
 import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api';
 
 export default function MapContainer(props) {
-    const [loc, setLoc] = useState([]);
+    const [locations, setLocations] = useState([]);
 
-    // useEffect(()=>{
-    //   fetch('/api/location')
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     const jsData = JSON.parse(data);
-    //     setLoc([]);
-    //     for (let item in jsData) {
-    //       setLoc((prev) => ((jsData[item].lat == undefined)||([...prev].findIndex((ele)=>ele.lat == jsData[item].lat)+1))? [...prev]: [...prev, {lat: Number(jsData[item].lat), long: Number(jsData[item].long)}]);
-    //     }
-    // })
-    // }, []) 
+    function createLocation(name, long, lat, time ) {
+        return {name: name, long: long, lat: lat, time: time};
+    }
 
     useEffect(() => {
-        fetch('/api/location_client')
+        fetch('http://localhost:3001/api/eqs/5/50') // mag and limit are two numbers 
             .then((res) => res.json())
             .then((data) => {
                 // console.log(data);
-                setLoc([]);
-                for (let item of data) {
-                    setLoc((prevloc) => ([...prevloc].findIndex((ele) => ele.lat == item.locLat) + 1) ? [...prevloc] : [...prevloc, {
-                        lat: item.locLat,
-                        long: item.locLong,
-                        venueid: item.venueid
-                    }]);
+                // Setting the row of the table.
+                setLocations([]); // React useEffect run twice under strict mode.
+                for (let item of data[0].event) {
+                    console.log(item);
+                    console.log( item.origin[0].longitude[0].value[0]);
+                    setLocations((prevRows) => 
+                    [...prevRows, createLocation(
+                        item.description[0].text[0], //name
+                        item.origin[0].longitude[0].value[0], //long
+                        item.origin[0].latitude[0].value[0], //lat
+                        item.origin[0].time[0].value[0] //time, used for key 
+                        )]);
                 }
+                // var time_now = new Date();
+                // setDate(time_now.toLocaleString());
+                // setLoading(false);
             })
     }, [])
 
@@ -39,7 +39,7 @@ export default function MapContainer(props) {
     };
 
     const defaultCenter = {
-        lat: 22.285056, lng: 114.222075
+        lat: 0, lng: 0
     }
 
     const handlelocation = (id, e) => {
@@ -54,10 +54,10 @@ export default function MapContainer(props) {
                 mapContainerStyle={mapStyles}
                 zoom={13}
                 center={defaultCenter}>
-                {loc.map((file, index) =>
-                    <Marker key={loc[index].venueid}
-                            onClick={handlelocation.bind(this, loc[index].venueid)}
-                            position={{lat: loc[index].lat, lng: loc[index].long}}>
+                {locations.map((file, index) =>
+                    <Marker key={locations[index].time}
+                            onClick={console.log("clicked")}
+                            position={{lat: Number(locations[index].lat), lng: Number(locations[index].long)}}>
                     </Marker>)}
             </GoogleMap>
 
