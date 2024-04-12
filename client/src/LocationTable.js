@@ -49,28 +49,43 @@ export default function LocationTable(props) {
         return {id: id, location: location, magnitude: mag, time: time};
     }
 
+    // Fetch when first load.
     useEffect(() => {
         fetch('http://localhost:3001/api/eqs/5/50') // mag and limit are two numbers 
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 // Setting the row of the table.
                 setRows([]); // React useEffect run twice under strict mode.
                 for (let item of data[0].event) {
                     // console.log(item);
-                    setRows((prevRows) => item.description[0].text[0].toLowerCase().includes(search.toLowerCase()) ? 
+                    setRows((prevRows) => 
                     [...prevRows, createRow(item.origin[0].time[0].value[0], 
                         item.description[0].text[0], 
                         item.magnitude[0].mag[0].value[0],
                         item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6) // Adjusting the time format into a readable format. 
-                        )] : 
-                    [...prevRows]);
+                        // replacing 'T' 'Z' with ', '.
+                        // remove the last four elements of the array, the miliseconds.
+                        )]);
                 }
                 var time_now = new Date();
                 setDate(time_now.toLocaleString());
                 setLoading(false);
+                // console.log(rows);
             })
     }, [])
+
+    // useEffect(() => {
+    //     setfilter([]);
+    //     for(let item of rows){
+    //         console.log(item);
+    //         // console.log(search);
+    //         // console.log(item.location.toLowerCase().includes(search.toLowerCase()));
+    //         console.log(filter);
+    //         setfilter( item.location.toLowerCase().includes(search.toLowerCase()) ? [...filter, item]: [filter]);
+    //     }
+        
+    // }, [search])
 
     return (
         <Box sx={{width: "100%"}}>
@@ -84,7 +99,7 @@ export default function LocationTable(props) {
             </Box>
 
             <DataGrid
-                rows={rows}
+                rows={rows.filter((item)=>item.location.toLowerCase().includes(search.toLowerCase()))} // FIlter for the search box. 
                 columns={columns}
                 autoHeight
                 disableColumnMenu
