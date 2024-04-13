@@ -7,8 +7,8 @@ export default function MapContainer(props) {
     const [locations, setLocations] = useState([]);
     const [showing, setShowing] = useState();
 
-    function createLocation(name, long, lat, time ) {
-        return {name: name, long: long, lat: lat, time: time};
+    function createLocation(name, long, lat, time, mag ) {
+        return {name: name, long: long, lat: lat, time: time, mag: mag};
     }
 
     useEffect(() => {
@@ -26,12 +26,11 @@ export default function MapContainer(props) {
                         item.description[0].text[0], //name
                         item.origin[0].longitude[0].value[0], //long
                         item.origin[0].latitude[0].value[0], //lat
-                        item.origin[0].time[0].value[0] //time, used for key 
+                        item.origin[0].time[0].value[0], //time, used for key 
+                        item.magnitude[0].mag[0].value[0], // magnitude used in a display window.
+
                         )]);
                 }
-                // var time_now = new Date();
-                // setDate(time_now.toLocaleString());
-                // setLoading(false);
             })
     }, [])
 
@@ -62,7 +61,9 @@ export default function MapContainer(props) {
                         onCloseClick={()=>setShowing()}    
                     >
 
-                        {locations[index].name}
+                        Magnitude:&nbsp;
+                        {locations[index].mag}<br></br>
+                        {locations[index].name} 
 
                     </InfoWindow>)}
 
