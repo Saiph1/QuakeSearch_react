@@ -1,8 +1,11 @@
 import {React, useState, useEffect} from 'react';
-import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api';
+// import {GoogleMap, LoadScript, AdvancedMarker , InfoWindow} from '@react-google-maps/api';
+import {APIProvider, Map, Marker, InfoWindow } from '@vis.gl/react-google-maps';
+
 
 export default function MapContainer(props) {
     const [locations, setLocations] = useState([]);
+    const [showing, setShowing] = useState();
 
     function createLocation(name, long, lat, time ) {
         return {name: name, long: long, lat: lat, time: time};
@@ -16,8 +19,8 @@ export default function MapContainer(props) {
                 // Setting the row of the table.
                 setLocations([]); // React useEffect run twice under strict mode.
                 for (let item of data[0].event) {
-                    console.log(item);
-                    console.log( item.origin[0].longitude[0].value[0]);
+                    // console.log(item);
+                    // console.log( item.origin[0].longitude[0].value[0]);
                     setLocations((prevRows) => 
                     [...prevRows, createLocation(
                         item.description[0].text[0], //name
@@ -39,28 +42,41 @@ export default function MapContainer(props) {
     };
 
     const defaultCenter = {
-        lat: 0, lng: 0
-    }
-
-    const handlelocation = (id, e) => {
-        e.preventDefault();
-        console.log("debug purpose");
+        lat: 23.7, lng: 121
     }
 
     return (
-        <LoadScript
-            googleMapsApiKey='AIzaSyAbZ9dC0gMiRjip7f6SHMhgVZZK15JJJcc'>
-            <GoogleMap
-                mapContainerStyle={mapStyles}
-                zoom={13}
-                center={defaultCenter}>
+        <APIProvider
+        apiKey={"AIzaSyAbZ9dC0gMiRjip7f6SHMhgVZZK15JJJcc"}>
+            <Map
+                style={mapStyles}
+                defaultZoom={2}
+                defaultCenter={defaultCenter}>
                 {locations.map((file, index) =>
-                    <Marker key={locations[index].time}
-                            onClick={console.log("clicked")}
-                            position={{lat: Number(locations[index].lat), lng: Number(locations[index].long)}}>
-                    </Marker>)}
-            </GoogleMap>
+                <>
+                    {(showing == index) && ( // conditional rendering when clicked on particular mark, render accordingly. 
 
-        </LoadScript>
+                    <InfoWindow position={{
+                        lat: Number(locations[index].lat), 
+                        lng:Number(locations[index].long)}}
+                        onCloseClick={()=>setShowing()}    
+                    >
+
+                        {locations[index].name}
+
+                    </InfoWindow>)}
+
+                    <Marker key={index}
+                        onClick={()=>setShowing(index)}
+                        position={{lat: Number(locations[index].lat), lng: Number(locations[index].long)}}>
+                                
+                    </Marker >
+                </>
+                    )}
+                    
+            </Map>
+            
+
+        </APIProvider>
     )
 }

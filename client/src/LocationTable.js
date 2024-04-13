@@ -29,9 +29,9 @@ export default function LocationTable(props) {
             field: "time",
             type: "string",
             hideable: false,
-            width: 200,
+            width: 250,
             renderHeader: (params) => (
-                <strong>{"Time"}</strong>
+                <strong>{"Time (UTC+8)"}</strong>
             )
         },
         {
@@ -51,7 +51,7 @@ export default function LocationTable(props) {
 
     // Fetch when first load.
     useEffect(() => {
-        fetch('http://localhost:3001/api/eqs/5/50') // mag and limit are two numbers 
+        fetch('http://localhost:3001/api/eqs/5/50')
             .then((res) => res.json())
             .then((data) => {
                 // console.log(data);
@@ -63,7 +63,7 @@ export default function LocationTable(props) {
                     [...prevRows, createRow(item.origin[0].time[0].value[0], 
                         item.description[0].text[0], 
                         item.magnitude[0].mag[0].value[0],
-                        item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6) // Adjusting the time format into a readable format. 
+                        item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6) // Adjusting the time data into a readable format. 
                         // replacing 'T' 'Z' with ', '.
                         // remove the last four elements of the array, the miliseconds.
                         )]);
@@ -75,18 +75,6 @@ export default function LocationTable(props) {
             })
     }, [])
 
-    // useEffect(() => {
-    //     setfilter([]);
-    //     for(let item of rows){
-    //         console.log(item);
-    //         // console.log(search);
-    //         // console.log(item.location.toLowerCase().includes(search.toLowerCase()));
-    //         console.log(filter);
-    //         setfilter( item.location.toLowerCase().includes(search.toLowerCase()) ? [...filter, item]: [filter]);
-    //     }
-        
-    // }, [search])
-
     return (
         <Box sx={{width: "100%"}}>
 
@@ -94,7 +82,7 @@ export default function LocationTable(props) {
                 <TextField id="input" className="text" onInput={() => setSearch(document.getElementById('input').value)}
                            label="Enter a location name" variant="outlined" placeholder="Search..." size="small"
                            sx={{flexGrow: 1, minWidth: 100, mr: 2}}/>
-                <Typography sx={{flexGrow: 0}}> Last updated on: {date} </Typography>
+                <Typography sx={{flexGrow: 0}}> Last updated on: {date} (UTC+8)</Typography>
 
             </Box>
 
