@@ -1,24 +1,20 @@
 import {React, useState, useEffect} from 'react';
-// import Link, Menu, MenuItem, Toolbar, Typography, useTheme from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import MenuIcon from '@mui/icons-material/Menu';
+import {Link, useNavigate } from 'react-router-dom';
 
-const pages = ['About'];
+const pages = ['home','about'];
 
 
 export default function Layout(props) {
-    const [anchorElNav, setAnchorElNav] = useState(null);
+    const navigate = useNavigate();
 
     return (
         <>
@@ -61,9 +57,9 @@ export default function Layout(props) {
                     <TravelExploreIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
+                        // onClick={()=>navigate('/')}
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
                         sx={{
                         mr: 2,
                         display: { xs: 'flex', md: 'none' },
@@ -81,9 +77,15 @@ export default function Layout(props) {
                         {pages.map((page) => (
                         <Button
                             key={page}
-                            onClick={console.log("test")}
-                            sx={{ my: 1, color: 'white', display: 'block', fontFamily: 'Roboto',}}
-                        >
+                            onClick={()=>navigate('/'+(page=='home'? "":page))} //Navigate back to the index or the about page. 
+                            sx={{ 
+                                my: 0, 
+                                color: 'white', 
+                                display: 'block', 
+                                fontFamily: 'Roboto',
+                                fontWeight: 300, 
+                            }}>
+
                             {page}
                         </Button>
                         ))}

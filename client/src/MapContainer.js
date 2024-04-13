@@ -19,7 +19,6 @@ export default function MapContainer(props) {
                 // Setting the row of the table.
                 setLocations([]); // React useEffect run twice under strict mode.
                 for (let item of data[0].event) {
-                    // console.log(item);
                     // console.log( item.origin[0].longitude[0].value[0]);
                     setLocations((prevRows) => 
                     [...prevRows, createLocation(
@@ -29,7 +28,7 @@ export default function MapContainer(props) {
                         item.origin[0].time[0].value[0], //time, used for key 
                         item.magnitude[0].mag[0].value[0], // magnitude used in a display window.
 
-                        )]);
+                    )]);
                 }
             })
     }, [])
@@ -55,7 +54,8 @@ export default function MapContainer(props) {
                 <>
                     {(showing == index) && ( // conditional rendering when clicked on particular mark, render accordingly. 
 
-                    <InfoWindow position={{
+                    <InfoWindow key={locations[index].time}
+                        position={{
                         lat: Number(locations[index].lat), 
                         lng:Number(locations[index].long)}}
                         onCloseClick={()=>setShowing()}    
