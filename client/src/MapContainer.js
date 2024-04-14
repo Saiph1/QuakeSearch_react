@@ -19,6 +19,7 @@ export default function MapContainer(props) {
 
     useEffect(() => {
         setTableshow(props.findlocbyitstime);
+        setShowing();
     }, [props.findlocbyitstime])
 
     useEffect(() => {
@@ -77,7 +78,7 @@ export default function MapContainer(props) {
                     </InfoWindow>)}
 
                     <Marker key={index}
-                        onClick={()=>setShowing(index)}
+                        onClick={()=>{setShowing(index);setTableshow()}}
                         position={{lat: Number(locations[index].lat), lng: Number(locations[index].long)}}>
                                 
                     </Marker >
