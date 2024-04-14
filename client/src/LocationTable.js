@@ -45,13 +45,13 @@ export default function LocationTable(props) {
         },
     ];
 
-    function createRow(id, location, mag, time) {
-        return {id: id, location: location, magnitude: mag, time: time};
+    function createRow(id, location, mag, time, lat, long) {
+        return {id: id, location: location, magnitude: mag, time: time, lat: lat, long: long};
     }
 
     // Fetch when first load.
     useEffect(() => {
-        fetch('http://localhost:3001/api/eqs/5/50')
+        fetch('http://localhost:3001/api/eqs/'+props.lowestmag+'/'+props.eqlimit) // passed from the parent (app)
             .then((res) => res.json())
             .then((data) => {
                 // console.log(data);
@@ -63,9 +63,11 @@ export default function LocationTable(props) {
                     [...prevRows, createRow(item.origin[0].time[0].value[0], 
                         item.description[0].text[0], 
                         item.magnitude[0].mag[0].value[0],
-                        item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6) // Adjusting the time data into a readable format. 
+                        item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
                         // replacing 'T' 'Z' with ', '.
                         // remove the last four elements of the array, the miliseconds.
+                        item.origin[0].latitude[0].value[0], //lat, passing this to the parent -> map center 
+                        item.origin[0].longitude[0].value[0], //long, passing this to the parent -> map center 
                         )]);
                 }
                 var time_now = new Date();
@@ -78,7 +80,7 @@ export default function LocationTable(props) {
     return (
         <Box sx={{width: "100%"}}>
 
-            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 1}}>
                 <TextField id="input" className="text" onInput={() => setSearch(document.getElementById('input').value)}
                            label="Enter a location name" variant="outlined" placeholder="Search..." size="small"
                            sx={{flexGrow: 1, minWidth: 100, mr: 2}}/>
@@ -92,10 +94,11 @@ export default function LocationTable(props) {
                 autoHeight
                 disableColumnMenu
                 pageSize={100}
+                onRowClick={(data)=>{props.loctime(data.row.time)}} // temporary disable moving the map center. (which cause the map to freeze)
+                // onRowClick={(data)=>{props.movemap({lat: Number(data.row.lat), lng: Number(data.row.long)}); props.loctime(data.row.time)}}
                 rowsPerPageOptions={[100]}
                 components={{LoadingOverlay: LinearProgress,}}
                 loading={loading}
-                onRowClick={(data) => {console.log(data);}}
             />
 
         </Box>
