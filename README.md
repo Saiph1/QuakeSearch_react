@@ -6,9 +6,12 @@ An earthquake query application.
 
 1. First install nodejs at https://nodejs.org/en/download/
 1. Clone this repository
-1. Install required libraries in the cloned directory:
+1. Install required libraries for both front-end and back-end:
    
     ```
+    cd client
+    npm install
+    cd ../server
     npm install
     ```
 1. Run node web server and API server in development mode:
@@ -18,3 +21,7 @@ An earthquake query application.
     cd ../server
     node index.js
     ```
+1. Access the project on:
+   ```
+   localhost:3000
+   ```
