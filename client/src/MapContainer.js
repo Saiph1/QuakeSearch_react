@@ -30,7 +30,7 @@ export default function MapContainer(props) {
                 item.origin[0].longitude[0].value[0], //long
                 item.origin[0].latitude[0].value[0], //lat
                 item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
-                item.magnitude[0].mag[0].value[0], // magnitude used in a display window.
+                parseFloat(item.magnitude[0].mag[0].value[0]).toFixed(1),// magnitude used in a display window.
 
             )]);
         }

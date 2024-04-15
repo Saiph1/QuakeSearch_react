@@ -57,7 +57,7 @@ export default function LocationTable(props) {
             setRows((prevRows) => 
             [...prevRows, createRow(item.origin[0].time[0].value[0], 
                 item.description[0].text[0], 
-                item.magnitude[0].mag[0].value[0],
+                parseFloat(item.magnitude[0].mag[0].value[0]).toFixed(1), //magnitude, but in a consistent format (1 decimal place.)
                 item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
                 // replacing 'T' 'Z' with ', '.
                 // remove the last four elements of the array, the miliseconds.

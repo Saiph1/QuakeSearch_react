@@ -12,6 +12,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
+
 import dayjs from 'dayjs';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
   const [date, setDate] = useState();
   const [tableclicked, setTableclicked] = useState("");
   const [data, setData] = useState();
+  const [submit, setSubmit] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
   // fetch new data, then pass to the child components. 
   useEffect(() => {
@@ -29,10 +33,18 @@ function App() {
           console.log(data);
           setData(data[0].event);
         })
+    // Cooldown for the submit button to avoid too many query in a short amount of time. 
+    const countdown = setInterval(() => {
+        setCooldown((prevCount)=>{
+          if (prevCount <=0 ){
+            clearInterval(countdown);
+            return prevCount; 
+          }
+          else return prevCount-1;
+        });
+    }, 1000);
     
-  }, [mag, limit, date]); // Fetch new data when these three states update. 
-
-
+  }, [submit]); // Fetch new data when these three states update. 
 
   return (
     <div className="App">
@@ -75,8 +87,8 @@ function App() {
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
                         <InputLabel>No. of results</InputLabel>
                         <Select
-                          labelId="select_magnitude"
-                          id="select_magnitude"
+                          labelId="select_results"
+                          id="select_results"
                           // defaultValue={0}
                           value={limit}
                           label="Magnitude"
@@ -89,6 +101,15 @@ function App() {
                           <MenuItem value={300}>300 or more</MenuItem>
                         </Select>
                         </FormControl>
+                        <Button variant="contained" 
+                          sx={{marginLeft: 1}} 
+                          disabled={cooldown>0} 
+                          onClick={()=>{
+                            setSubmit(!submit); 
+                            setCooldown(5)
+                          }}> 
+                          Submit
+                        </Button>
                     </Box>
                     <Box sx={{display: "flex", alignItems: "left", justifyContent: "left", width: "100%", marginBottom: 1}}>
                       
