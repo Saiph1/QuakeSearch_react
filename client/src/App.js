@@ -13,31 +13,35 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 
 import dayjs from 'dayjs';
 
 function App() {
   const [mag, setMag] = useState(5);
   const [limit, setLimit] = useState(200);
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(dayjs( '2024-01-01'));
   const [tableclicked, setTableclicked] = useState("");
   const [data, setData] = useState();
   const [submit, setSubmit] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [displaySuccessMessage, setDisplaySuccessMessage] = useState(0);
+  const [incorrectDate, setIncorrectDate] = useState(false);
 
   // fetch new data, then pass to the child components. 
   useEffect(() => {
-    fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit) // fetch according to the selection options. 
+    fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          setData(data[0].event);
+          // console.log(data);
+          setData(data.data[0].event);
         })
     // Cooldown for the submit button to avoid too many query in a short amount of time. 
     const countdown = setInterval(() => {
         setCooldown((prevCount)=>{
           if (prevCount <=0 ){
             clearInterval(countdown);
+            setDisplaySuccessMessage(0);
             return prevCount; 
           }
           else return prevCount-1;
@@ -61,9 +65,11 @@ function App() {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Starting date"
-                          // value={date}
-                          onChange={(newValue) => {setDate(newValue.$d); console.log(newValue); console.log(date)}}
-                          />
+                          value={date}
+                          onChange={(newValue) => {
+                            setDate(newValue); 
+                            setIncorrectDate(!newValue.isBefore(dayjs( new Date().toLocaleString()))); // check whther the input date is before "today".
+                          }}/>
                       </LocalizationProvider>
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
                           <InputLabel>Magnitude</InputLabel>
@@ -72,7 +78,7 @@ function App() {
                             id="select_magnitude"
                             value={mag}
                             label="Magnitude"
-                            onChange={(event)=>{setMag(event.target.value); console.log(event.target.value)}}
+                            onChange={(event)=>{setMag(event.target.value)}}
                           >
                             <MenuItem value={1}>1 or above</MenuItem>
                             <MenuItem value={2}>2 or above</MenuItem>
@@ -85,36 +91,37 @@ function App() {
                           </Select>
                         </FormControl>
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
-                        <InputLabel>No. of results</InputLabel>
+                        <InputLabel>Maximum results</InputLabel>
                         <Select
                           labelId="select_results"
                           id="select_results"
                           // defaultValue={0}
                           value={limit}
                           label="Magnitude"
-                          onChange={(event)=>{setLimit(event.target.value); console.log(event.target.value)}}
+                          onChange={(event)=>{setLimit(event.target.value)}}
                         >
-                          <MenuItem value={20}>20 or more</MenuItem>
-                          <MenuItem value={50}>50 or more</MenuItem>
-                          <MenuItem value={100}>100 or more</MenuItem>
-                          <MenuItem value={200}>200 or more</MenuItem>
-                          <MenuItem value={300}>300 or more</MenuItem>
+                          <MenuItem value={20}>Less than 20</MenuItem>
+                          <MenuItem value={50}>Less than 50</MenuItem>
+                          <MenuItem value={100}>Less than 100</MenuItem>
+                          <MenuItem value={200}>Less than 200</MenuItem>
+                          <MenuItem value={300}>Less than 300</MenuItem>
                         </Select>
                         </FormControl>
                         <Button variant="contained" 
                           sx={{marginLeft: 1}} 
-                          disabled={cooldown>0} 
+                          disabled={cooldown>0 || incorrectDate} 
                           onClick={()=>{
                             setSubmit(!submit); 
-                            setCooldown(5)
+                            setDisplaySuccessMessage(5);
+                            setCooldown(5);
                           }}> 
                           Submit
                         </Button>
+                        
                     </Box>
-                    <Box sx={{display: "flex", alignItems: "left", justifyContent: "left", width: "100%", marginBottom: 1}}>
-                      
-                    </Box>
-                    <LocationTable data={data} date={date} loctime={setTableclicked}/>
+                    {displaySuccessMessage >0? (<Alert severity="success" sx={{marginBottom: 1}}>Your request has been submitted.</Alert>):(<></>)}
+                    {incorrectDate >0? (<Alert severity="error" sx={{marginBottom: 1}}>Please check your input date!</Alert>):(<></>)}
+                    <LocationTable data={data} loctime={setTableclicked}/>
                 </Grid>
 
             </Grid>

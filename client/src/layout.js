@@ -49,7 +49,7 @@ export default function Layout(props) {
                         open={false}
                         >
                         {pages.map((page) => (
-                            <MenuItem key={page} onClick={console.log("test")}>
+                            <MenuItem key={page}>
                             <Typography textAlign="center">{page}</Typography>
                             </MenuItem>
                         ))}

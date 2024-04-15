@@ -20,8 +20,8 @@ export default function MapContainer(props) {
     // when first load, or the parent passes different props.data
     useEffect(() => {
         setLocations([]); // React useEffect run twice under strict mode.
-        console.log(props.data)
-        if (props.data == undefined) return; 
+        // console.log(props.data)
+        if (props.data === undefined) return; 
         for (let item of props.data) {
             // console.log( item.origin[0].longitude[0].value[0]);
             setLocations((prevRows) => 
@@ -52,29 +52,29 @@ export default function MapContainer(props) {
                 defaultCenter={{lat: 23.7, lng: 121}}
             >
                 {locations.map((file, index) =>
-                <>
-                    {((showing === index)||(tableshow === locations[index].time)) && ( // conditional rendering when clicked on particular mark, render accordingly. 
+                    <div key={locations[index]+index}>
+                        {((showing === index)||(tableshow === locations[index].time)) && ( // conditional rendering when clicked on a particular mark, render accordingly. 
 
-                    <InfoWindow key={locations[index]}
-                        position={{
-                        lat: Number(locations[index].lat), 
-                        lng:Number(locations[index].long)}}
-                        onCloseClick={()=>setShowing()}    
-                    >
+                        <InfoWindow key={locations[index]}
+                            position={{
+                            lat: Number(locations[index].lat), 
+                            lng:Number(locations[index].long)}}
+                            onCloseClick={()=>setShowing()}    
+                        >
 
-                        Magnitude:&nbsp;
-                        {locations[index].mag}<br></br>
-                        {locations[index].name} 
+                            Magnitude:&nbsp;
+                            {locations[index].mag}<br></br>
+                            {locations[index].name} 
 
-                    </InfoWindow>)}
+                        </InfoWindow>)}
 
-                    <Marker key={index}
-                        onClick={()=>{setShowing(index);setTableshow()}}
-                        position={{lat: Number(locations[index].lat), lng: Number(locations[index].long)}}>
-                                
-                    </Marker >
-                </>
-                    )}
+                        <Marker key={index}
+                            onClick={()=>{setShowing(index);setTableshow()}}
+                            position={{lat: Number(locations[index].lat), lng: Number(locations[index].long)}}>
+                                    
+                        </Marker >
+                    </div>
+                )}
                     
             </Map>
         </APIProvider>

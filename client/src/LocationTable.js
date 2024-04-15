@@ -51,7 +51,7 @@ export default function LocationTable(props) {
     // when first load, or the parent passes different props.data
     useEffect(() => {
         setRows([]); // React useEffect run twice under strict mode.]
-        if (props.data==undefined) return;
+        if (props.data===undefined) return;
         for (let item of props.data) {
             // console.log(item);
             setRows((prevRows) => 
