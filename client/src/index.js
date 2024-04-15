@@ -5,24 +5,25 @@ import App from './App';
 import About from './about';
 import Layout from './layout';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <React.StrictMode>
-      {/* <Title name={"test"}></Title> */}
-    </React.StrictMode>
-    <div>
-      <Layout/>
-    </div>
-    <React.StrictMode>
-      <Routes>
-        <Route path="/" element={<App/>} />
-        <Route path="/about" element={<About/>} />
-      </Routes>
-    </React.StrictMode>
-  </BrowserRouter>
+  <>
+    <BrowserRouter>
+      <React.StrictMode>
+        <div>
+          <Layout/>
+        </div>
+      </React.StrictMode>
+      <React.StrictMode>
+        <Routes>
+          <Route path="/" element={<App/>} />
+          <Route path="/about" element={<About/>} />
+        </Routes>
+      </React.StrictMode>
+    </BrowserRouter>
+  </>
   
 );
 

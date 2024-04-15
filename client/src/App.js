@@ -14,23 +14,34 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import dayjs from 'dayjs';
 
-// import Date from "./date";
-
 function App() {
   const [mag, setMag] = useState(5);
   const [limit, setLimit] = useState(200);
   const [date, setDate] = useState();
-  const [tableclicked, setTableclicked] = useState();
-  const [center, setCenter] = useState();
-  return (
+  const [tableclicked, setTableclicked] = useState("");
+  const [data, setData] = useState();
+
+  // fetch new data, then pass to the child components. 
+  useEffect(() => {
+    fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit) // fetch according to the selection options. 
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setData(data[0].event);
+        })
     
+  }, [mag, limit, date]); // Fetch new data when these three states update. 
+
+
+
+  return (
     <div className="App">
       <main>
         <Container maxWidth="xl" sx={{mt: 2}}>
             <Grid container spacing={2}>
                 <Grid key="map" lg={4} xs={12}>
                     <Box sx={{height: 400}}>
-                        <MapContainer lowestmag={mag} eqlimit={limit} center={center} findlocbyitstime={tableclicked}/>
+                        <MapContainer data={data} findlocbyitstime={tableclicked}/>
                     </Box>
                 </Grid>
                 <Grid key="table&date" lg={8} xs={12}>
@@ -38,51 +49,51 @@ function App() {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Starting date"
-                          // value={value}
-                          onChange={(newValue) => {setDate(newValue); console.log(newValue); console.log(date)}}
-                        />
+                          // value={date}
+                          onChange={(newValue) => {setDate(newValue.$d); console.log(newValue); console.log(date)}}
+                          />
                       </LocalizationProvider>
-                      <FormControl sx={{width: "20%", marginLeft: 1}}>
-                      <InputLabel>Magnitude</InputLabel>
-                      <Select
-                        labelId="select_magnitude"
-                        id="select_magnitude"
-                        // value={age}
-                        label="Magnitude"
-                        onChange={(event)=>setMag(event.target.value)}
-                      >
-                        <MenuItem value={1}>1 or above</MenuItem>
-                        <MenuItem value={2}>2 or above</MenuItem>
-                        <MenuItem value={3}>3 or above</MenuItem>
-                        <MenuItem value={4}>4 or above</MenuItem>
-                        <MenuItem value={5}>5 or above</MenuItem>
-                        <MenuItem value={6}>6 or above</MenuItem>
-                        <MenuItem value={7}>7 or above</MenuItem>
-                        <MenuItem value={8}>8 or above</MenuItem>
-                      </Select>
-                      </FormControl>
-
-                      <FormControl sx={{width: "20%", marginLeft: 1}}>
-                      <InputLabel>No. of results</InputLabel>
-                      <Select
-                        labelId="select_magnitude"
-                        id="select_magnitude"
-                        // value={age}
-                        label="Magnitude"
-                        onChange={(event)=>setLimit(event.target.value)}
-                      >
-                        <MenuItem value={20}>20 or more</MenuItem>
-                        <MenuItem value={50}>50 or more</MenuItem>
-                        <MenuItem value={100}>100 or more</MenuItem>
-                        <MenuItem value={200}>200 or more</MenuItem>
-                        <MenuItem value={300}>300 or more</MenuItem>
-                      </Select>
-                      </FormControl>
+                        <FormControl sx={{width: "20%", marginLeft: 1}}>
+                          <InputLabel>Magnitude</InputLabel>
+                          <Select
+                            labelId="select_magnitude"
+                            id="select_magnitude"
+                            value={mag}
+                            label="Magnitude"
+                            onChange={(event)=>{setMag(event.target.value); console.log(event.target.value)}}
+                          >
+                            <MenuItem value={1}>1 or above</MenuItem>
+                            <MenuItem value={2}>2 or above</MenuItem>
+                            <MenuItem value={3}>3 or above</MenuItem>
+                            <MenuItem value={4}>4 or above</MenuItem>
+                            <MenuItem value={5}>5 or above</MenuItem>
+                            <MenuItem value={6}>6 or above</MenuItem>
+                            <MenuItem value={7}>7 or above</MenuItem>
+                            <MenuItem value={8}>8 or above</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <FormControl sx={{width: "20%", marginLeft: 1}}>
+                        <InputLabel>No. of results</InputLabel>
+                        <Select
+                          labelId="select_magnitude"
+                          id="select_magnitude"
+                          // defaultValue={0}
+                          value={limit}
+                          label="Magnitude"
+                          onChange={(event)=>{setLimit(event.target.value); console.log(event.target.value)}}
+                        >
+                          <MenuItem value={20}>20 or more</MenuItem>
+                          <MenuItem value={50}>50 or more</MenuItem>
+                          <MenuItem value={100}>100 or more</MenuItem>
+                          <MenuItem value={200}>200 or more</MenuItem>
+                          <MenuItem value={300}>300 or more</MenuItem>
+                        </Select>
+                        </FormControl>
                     </Box>
                     <Box sx={{display: "flex", alignItems: "left", justifyContent: "left", width: "100%", marginBottom: 1}}>
                       
                     </Box>
-                    <LocationTable lowestmag={mag} eqlimit={limit} date={date} movemap={setCenter} loctime={setTableclicked}/>
+                    <LocationTable data={data} date={date} loctime={setTableclicked}/>
                 </Grid>
 
             </Grid>

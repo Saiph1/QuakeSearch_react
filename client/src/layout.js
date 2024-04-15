@@ -1,4 +1,4 @@
-import {React, useState, useEffect} from 'react';
+import {React} from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -8,7 +8,7 @@ import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import {Link, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 const pages = ['home','about'];
 
@@ -46,6 +46,7 @@ export default function Layout(props) {
                         sx={{
                             display: { xs: 'block', md: 'none' },
                         }}
+                        open={false}
                         >
                         {pages.map((page) => (
                             <MenuItem key={page} onClick={console.log("test")}>
@@ -77,7 +78,7 @@ export default function Layout(props) {
                         {pages.map((page) => (
                         <Button
                             key={page}
-                            onClick={()=>navigate('/'+(page=='home'? "":page))} //Navigate back to the index or the about page. 
+                            onClick={()=>navigate('/'+(page==='home'? "":page))} //Navigate back to the index or the about page. 
                             sx={{ 
                                 my: 0, 
                                 color: 'white', 

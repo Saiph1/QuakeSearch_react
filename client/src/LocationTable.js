@@ -48,34 +48,29 @@ export default function LocationTable(props) {
     function createRow(id, location, mag, time, lat, long) {
         return {id: id, location: location, magnitude: mag, time: time, lat: lat, long: long};
     }
-
-    // Fetch when first load.
+    // when first load, or the parent passes different props.data
     useEffect(() => {
-        fetch('http://localhost:3001/api/eqs/'+props.lowestmag+'/'+props.eqlimit) // passed from the parent (app)
-            .then((res) => res.json())
-            .then((data) => {
-                // console.log(data);
-                // Setting the row of the table.
-                setRows([]); // React useEffect run twice under strict mode.
-                for (let item of data[0].event) {
-                    // console.log(item);
-                    setRows((prevRows) => 
-                    [...prevRows, createRow(item.origin[0].time[0].value[0], 
-                        item.description[0].text[0], 
-                        item.magnitude[0].mag[0].value[0],
-                        item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
-                        // replacing 'T' 'Z' with ', '.
-                        // remove the last four elements of the array, the miliseconds.
-                        item.origin[0].latitude[0].value[0], //lat, passing this to the parent -> map center 
-                        item.origin[0].longitude[0].value[0], //long, passing this to the parent -> map center 
-                        )]);
-                }
-                var time_now = new Date();
-                setDate(time_now.toLocaleString());
-                setLoading(false);
-                // console.log(rows);
-            })
-    }, [])
+        setRows([]); // React useEffect run twice under strict mode.]
+        if (props.data==undefined) return;
+        for (let item of props.data) {
+            // console.log(item);
+            setRows((prevRows) => 
+            [...prevRows, createRow(item.origin[0].time[0].value[0], 
+                item.description[0].text[0], 
+                item.magnitude[0].mag[0].value[0],
+                item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
+                // replacing 'T' 'Z' with ', '.
+                // remove the last four elements of the array, the miliseconds.
+                item.origin[0].latitude[0].value[0], //lat, passing this to the parent -> map center 
+                item.origin[0].longitude[0].value[0], //long, passing this to the parent -> map center 
+                )]);
+        }
+        var time_now = new Date();
+        setDate(time_now.toLocaleString());
+        setLoading(false);
+        // console.log(rows);
+
+    }, [props.data])
 
     return (
         <Box sx={{width: "100%"}}>

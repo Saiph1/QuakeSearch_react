@@ -7,42 +7,34 @@ export default function MapContainer(props) {
     const [locations, setLocations] = useState([]);
     const [showing, setShowing] = useState();
     const [tableshow, setTableshow] = useState(props.findlocbyitstime);
-    const [center_now, setCenter_now] = useState();
 
     function createLocation(name, long, lat, time, mag ) {
         return {name: name, long: long, lat: lat, time: time, mag: mag};
     }
 
     useEffect(() => {
-        setCenter_now(props.center);
-    }, [props.center])
-
-    useEffect(() => {
         setTableshow(props.findlocbyitstime);
         setShowing();
     }, [props.findlocbyitstime])
 
+    // when first load, or the parent passes different props.data
     useEffect(() => {
-        fetch('http://localhost:3001/api/eqs/'+props.lowestmag+'/'+props.eqlimit) // passed from the parent (app)
-            .then((res) => res.json())
-            .then((data) => {
-                // console.log(data);
-                // Setting the row of the table.
-                setLocations([]); // React useEffect run twice under strict mode.
-                for (let item of data[0].event) {
-                    // console.log( item.origin[0].longitude[0].value[0]);
-                    setLocations((prevRows) => 
-                    [...prevRows, createLocation(
-                        item.description[0].text[0], //name
-                        item.origin[0].longitude[0].value[0], //long
-                        item.origin[0].latitude[0].value[0], //lat
-                        item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
-                        item.magnitude[0].mag[0].value[0], // magnitude used in a display window.
+        setLocations([]); // React useEffect run twice under strict mode.
+        console.log(props.data)
+        if (props.data == undefined) return; 
+        for (let item of props.data) {
+            // console.log( item.origin[0].longitude[0].value[0]);
+            setLocations((prevRows) => 
+            [...prevRows, createLocation(
+                item.description[0].text[0], //name
+                item.origin[0].longitude[0].value[0], //long
+                item.origin[0].latitude[0].value[0], //lat
+                item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
+                item.magnitude[0].mag[0].value[0], // magnitude used in a display window.
 
-                    )]);
-                }
-            })
-    }, [])
+            )]);
+        }
+    }, [props.data])
 
 
     const mapStyles = {
@@ -58,13 +50,12 @@ export default function MapContainer(props) {
                 style={mapStyles}
                 defaultZoom={2}
                 defaultCenter={{lat: 23.7, lng: 121}}
-                // center={{lat: center_now?.lat, lng: center_now?.lng}}
             >
                 {locations.map((file, index) =>
                 <>
-                    {((showing == index)||(tableshow == locations[index].time)) && ( // conditional rendering when clicked on particular mark, render accordingly. 
+                    {((showing === index)||(tableshow === locations[index].time)) && ( // conditional rendering when clicked on particular mark, render accordingly. 
 
-                    <InfoWindow key={locations[index].time}
+                    <InfoWindow key={locations[index]}
                         position={{
                         lat: Number(locations[index].lat), 
                         lng:Number(locations[index].long)}}
