@@ -1,6 +1,6 @@
-# A web application using React
+# QuakeSearch
 
-An earthquake query application. 
+An earthquake query application powered by Reactjs
 
 <h3>🛠&nbsp;Getting started with development</h3>
 
