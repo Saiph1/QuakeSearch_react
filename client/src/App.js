@@ -30,7 +30,7 @@ function App() {
 
   // fetch new data, then pass to the child components. 
   useEffect(() => {
-    fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
+    fetch('https://lchsuan.life:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
         .then((res) => res.json())
         .then((data) => {
           // console.log(data);
@@ -68,7 +68,8 @@ function App() {
                           value={date}
                           onChange={(newValue) => {
                             setDate(newValue); 
-                            setIncorrectDate(!newValue.isBefore(dayjs( new Date().toLocaleString()))); // check whther the input date is before "today".
+                            setIncorrectDate(!newValue.isBefore(dayjs( new Date()))); // check whther the input date is before "today".
+                            // This will solve the issue as Date.toLocaleString() would result in dayjs invalid date format. 
                           }}/>
                       </LocalizationProvider>
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
