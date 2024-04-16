@@ -30,10 +30,11 @@ function App() {
 
   // fetch new data, then pass to the child components. 
   useEffect(() => {
-    fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
+    fetch('https://lchsuan.life:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD'))
+    // fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
         .then((res) => res.json())
         .then((data) => {
-          // console.log(data);
+          // console.log("http success", data);
           setData(data.data[0].event);
         })
     // Cooldown for the submit button to avoid too many query in a short amount of time. 
@@ -68,7 +69,7 @@ function App() {
                           value={date}
                           onChange={(newValue) => {
                             setDate(newValue); 
-                            setIncorrectDate(!newValue.isBefore(dayjs( new Date().toLocaleString()))); // check whther the input date is before "today".
+                            setIncorrectDate(!newValue.isBefore(dayjs(new Date()))); // check whther the input date is before "today".
                           }}/>
                       </LocalizationProvider>
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
@@ -87,7 +88,6 @@ function App() {
                             <MenuItem value={5}>5 or above</MenuItem>
                             <MenuItem value={6}>6 or above</MenuItem>
                             <MenuItem value={7}>7 or above</MenuItem>
-                            <MenuItem value={8}>8 or above</MenuItem>
                           </Select>
                         </FormControl>
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
@@ -105,6 +105,8 @@ function App() {
                           <MenuItem value={100}>Less than 100</MenuItem>
                           <MenuItem value={200}>Less than 200</MenuItem>
                           <MenuItem value={300}>Less than 300</MenuItem>
+                          <MenuItem value={500}>Less than 500</MenuItem>
+                          <MenuItem value={1000}>Less than 1000</MenuItem>
                         </Select>
                         </FormControl>
                         <Button variant="contained" 
@@ -113,6 +115,7 @@ function App() {
                           onClick={()=>{
                             setSubmit(!submit); 
                             setDisplaySuccessMessage(5);
+                            setTableclicked("");
                             setCooldown(5);
                           }}> 
                           Submit
