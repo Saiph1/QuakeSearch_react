@@ -1,6 +1,8 @@
-# QuakeSearch
+#  [QuakeSearch](https://quakesearch.lchsuan.life/)
 
 An earthquake query application powered by Reactjs
+
+Access the project [here!](https://quakesearch.lchsuan.life/)
 
 <h3>🛠&nbsp;Getting started with development</h3>
 
