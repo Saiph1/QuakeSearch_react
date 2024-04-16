@@ -69,7 +69,8 @@ function App() {
                           value={date}
                           onChange={(newValue) => {
                             setDate(newValue); 
-                            setIncorrectDate(!newValue.isBefore(dayjs(new Date()))); // check whther the input date is before "today".
+                            setIncorrectDate(!newValue.isBefore(dayjs( new Date()))); // check whther the input date is before "today".
+                            // This will solve the issue as Date.toLocaleString() would result in dayjs invalid date format. 
                           }}/>
                       </LocalizationProvider>
                         <FormControl sx={{width: "20%", marginLeft: 1}}>
