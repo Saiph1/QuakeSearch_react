@@ -1,10 +1,10 @@
 #  [QuakeSearch](https://quakesearch.lchsuan.life/)
 
-An earthquake query application powered by Reactjs
+A lightweight earthquake query application powered by React, Express.js, and AWS.
 
 Access the project [here!](https://quakesearch.lchsuan.life/)
 
-<h3>🛠&nbsp;Getting started with development</h3>
+<h3>🛠&nbsp;Getting started with development: </h3>
 
 1. First install nodejs at https://nodejs.org/en/download/
 1. Clone this repository
