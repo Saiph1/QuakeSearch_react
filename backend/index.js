@@ -1,4 +1,6 @@
 const express = require("express");
+const fs = require('fs');
+const https = require('https');
 const app = express();
 // const {xml2js} = require('xml-js'); // This is used to convert the fetched data into JSON format. 
 const xml2js = require('xml2js');
@@ -9,11 +11,11 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 const PORT = 3001;
 
-// app.get('/api/test', (req, res)=> {
-//     // res.set('Content-Type', 'text/plain');
-//     console.log("test");
-//     res.status(200).json({succuess: "succeed."});
-// })
+app.get('/api/test', (req, res)=> {
+    // res.set('Content-Type', 'text/plain');
+    console.log("test");
+    res.status(200).json({succuess: "succeed."});
+})
 
 // =======================================================================================================
 // Method 1: direct query
@@ -75,3 +77,13 @@ app.get('/api/eqs2/:mag/:n/:date', (req, res)=> {
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+const options = {
+    key: fs.readFileSync('cert/private.key'),
+    cert: fs.readFileSync('cert/certificate.crt')
+};
+
+// https.createServer(options, app).listen(PORT, () => {
+//     console.log('HTTPS server running on port '+PORT);
+// });
+
+// module.exports.handler = serverless(app)
