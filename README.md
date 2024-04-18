@@ -27,3 +27,5 @@ Access the project [here!](https://quakesearch.lchsuan.life/)
    ```
    localhost:3000
    ```
+<h3>🛠&nbsp;Ongoing progress: </h3>
+- Experimenting PosgreSQL with node.js for advance query options.
