@@ -2,7 +2,7 @@
 
 A lightweight earthquake query application powered by React, Express.js, and AWS.
 
-Access the project [here!](https://quakesearch.lchsuan.life/)
+Access the project [here](https://quakesearch.lchsuan.life/)
 
 <h3>🛠&nbsp;Getting started with development: </h3>
 
