@@ -14,12 +14,16 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 import dayjs from 'dayjs';
 
 function App() {
-  const [mag, setMag] = useState(5);
-  const [limit, setLimit] = useState(200);
+  const [mag, setMag] = useState(4);
+  const [limit, setLimit] = useState(20);
   const [date, setDate] = useState(dayjs( '2024-01-01'));
   const [tableclicked, setTableclicked] = useState("");
   const [data, setData] = useState();
@@ -27,10 +31,12 @@ function App() {
   const [cooldown, setCooldown] = useState(0);
   const [displaySuccessMessage, setDisplaySuccessMessage] = useState(0);
   const [incorrectDate, setIncorrectDate] = useState(false);
+  const [open, setOpen] = useState(true);
 
   // fetch new data, then pass to the child components. 
   useEffect(() => {
-    fetch('https://lchsuan.life:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD'))
+    // fetch('https://lchsuan.life:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD'))
+    fetch('http://localhost:3001/api/get_eqs/'+limit+'?mag='+mag+"&time='"+date.format('YYYY-MM-DD')+"'")
     // fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
         .then((res) => res.json())
         .then((data) => {
@@ -51,9 +57,27 @@ function App() {
     
   }, [submit]); // Fetch new data when these three states update. 
 
+  const action = (
+    <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={()=>setOpen(false)}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+  )
   return (
     <div className="App">
       <main>
+        <Snackbar
+          open={open}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          autoHideDuration={5000}
+          onClose={()=>setOpen(false)}
+          message="Please note that the current database only supports data after 2024-01-01."
+          action={action}
+        />
         <Container maxWidth="xl" sx={{mt: 2}}>
             <Grid container spacing={2}>
                 <Grid key="map" lg={4} xs={12}>
@@ -82,8 +106,7 @@ function App() {
                             label="Magnitude"
                             onChange={(event)=>{setMag(event.target.value)}}
                           >
-                            <MenuItem value={1}>1 or above</MenuItem>
-                            <MenuItem value={2}>2 or above</MenuItem>
+                            <MenuItem value={""}>None</MenuItem>
                             <MenuItem value={3}>3 or above</MenuItem>
                             <MenuItem value={4}>4 or above</MenuItem>
                             <MenuItem value={5}>5 or above</MenuItem>
@@ -91,8 +114,8 @@ function App() {
                             <MenuItem value={7}>7 or above</MenuItem>
                           </Select>
                         </FormControl>
-                        <FormControl sx={{width: "20%", marginLeft: 1}}>
-                        <InputLabel>Maximum results</InputLabel>
+                        <FormControl sx={{width: "15%", marginLeft: 1}}>
+                        <InputLabel>Max. results</InputLabel>
                         <Select
                           labelId="select_results"
                           id="select_results"
@@ -101,13 +124,16 @@ function App() {
                           label="Magnitude"
                           onChange={(event)=>{setLimit(event.target.value)}}
                         >
-                          <MenuItem value={20}>Less than 20</MenuItem>
-                          <MenuItem value={50}>Less than 50</MenuItem>
-                          <MenuItem value={100}>Less than 100</MenuItem>
-                          <MenuItem value={200}>Less than 200</MenuItem>
-                          <MenuItem value={300}>Less than 300</MenuItem>
-                          <MenuItem value={500}>Less than 500</MenuItem>
-                          <MenuItem value={1000}>Less than 1000</MenuItem>
+                          <MenuItem value={20}>20</MenuItem>
+                          <MenuItem value={50}>50</MenuItem>
+                          <MenuItem value={100}>100</MenuItem>
+                          <MenuItem value={200}>200</MenuItem>
+                          <MenuItem value={300}>300</MenuItem>
+                          <MenuItem value={500}>500</MenuItem>
+                          <MenuItem value={1000}>1000</MenuItem>
+                          <MenuItem value={2000}>2000</MenuItem>
+                          <MenuItem value={3000}>3000</MenuItem>
+                          <MenuItem value={10000}> All data</MenuItem>
                         </Select>
                         </FormControl>
                         <Button variant="contained" 
@@ -121,13 +147,11 @@ function App() {
                           }}> 
                           Submit
                         </Button>
-                        
                     </Box>
                     {displaySuccessMessage >0? (<Alert severity="success" sx={{marginBottom: 1}}>Your request has been submitted.</Alert>):(<></>)}
                     {incorrectDate >0? (<Alert severity="error" sx={{marginBottom: 1}}>Please check your input date!</Alert>):(<></>)}
                     <LocationTable data={data} loctime={setTableclicked}/>
                 </Grid>
-
             </Grid>
         </Container>
       </main>

@@ -23,16 +23,28 @@ export default function MapContainer(props) {
         // console.log(props.data)
         if (props.data === undefined) return; 
         for (let item of props.data) {
-            // console.log( item.origin[0].longitude[0].value[0]);
             setLocations((prevRows) => 
+
+            // Method 1: Direct Query:
+            // [...prevRows, createLocation(
+            //     item.description[0].text[0], //name
+            //     item.origin[0].longitude[0].value[0], //long
+            //     item.origin[0].latitude[0].value[0], //lat
+            //     item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
+            //     parseFloat(item.magnitude[0].mag[0].value[0]).toFixed(1),// magnitude used in a display window.
+
+            // )]);
+
+            // Method 2: PostgreSQL Query:
             [...prevRows, createLocation(
-                item.description[0].text[0], //name
-                item.origin[0].longitude[0].value[0], //long
-                item.origin[0].latitude[0].value[0], //lat
-                item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
-                parseFloat(item.magnitude[0].mag[0].value[0]).toFixed(1),// magnitude used in a display window.
+                item.location, //name
+                item.long, //long
+                item.lat, //lat
+                item.time.replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
+                parseFloat(item.mag).toFixed(1),// magnitude used in a display window.
 
             )]);
+
         }
     }, [props.data])
 

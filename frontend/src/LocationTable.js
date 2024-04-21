@@ -55,15 +55,30 @@ export default function LocationTable(props) {
         for (let item of props.data) {
             // console.log(item);
             setRows((prevRows) => 
-            [...prevRows, createRow(item.origin[0].time[0].value[0], 
-                item.description[0].text[0], 
-                parseFloat(item.magnitude[0].mag[0].value[0]).toFixed(1), //magnitude, but in a consistent format (1 decimal place.)
-                item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
+            
+            // Method1: Direct query:
+            // [...prevRows, createRow(item.origin[0].time[0].value[0], 
+            //     item.description[0].text[0], 
+            //     parseFloat(item.magnitude[0].mag[0].value[0]).toFixed(1), //magnitude, but in a consistent format (1 decimal place.)
+            //     item.origin[0].time[0].value[0].replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
+            //     // replacing 'T' 'Z' with ', '.
+            //     // remove the last four elements of the array, the miliseconds.
+            //     item.origin[0].latitude[0].value[0], //lat, passing this to the parent -> map center 
+            //     item.origin[0].longitude[0].value[0], //long, passing this to the parent -> map center 
+            // )]
+
+            // Method2: PostgreSQL query:
+            [...prevRows, createRow(item.time, 
+                item.location, //name
+                parseFloat(item.mag).toFixed(1), //magnitude, but in a consistent format (1 decimal place.)
+                item.time.replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
                 // replacing 'T' 'Z' with ', '.
                 // remove the last four elements of the array, the miliseconds.
-                item.origin[0].latitude[0].value[0], //lat, passing this to the parent -> map center 
-                item.origin[0].longitude[0].value[0], //long, passing this to the parent -> map center 
-                )]);
+                item.lat, //lat, passing this to the parent -> map center 
+                item.long, //long, passing this to the parent -> map center 
+            )]
+            
+            );
         }
         var time_now = new Date();
         setDate(time_now.toLocaleString());
