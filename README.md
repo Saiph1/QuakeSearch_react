@@ -1,6 +1,6 @@
 #  [QuakeSearch](https://quakesearch.lchsuan.life/)
 
-A lightweight earthquake query application powered by React, Express.js, and AWS.
+A lightweight earthquake query application powered by React, Express.js, PostgreSQL and AWS.
 
 Access the project [here](https://quakesearch.lchsuan.life/)
 
