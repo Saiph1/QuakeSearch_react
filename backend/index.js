@@ -7,7 +7,7 @@ const xml2js = require('xml2js');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 const PORT = process.env.PORT || 3001;
-const db = require('./db')
+const db = require('./db').client
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -33,10 +33,17 @@ app.use(bodyParser.json());
 
 app.get('/api/sql/connection_test', async (req, res)=>{
     try {
-        const result = await db.connect();
-        res.json(result);
+        db.query('SELECT 1', (err, result)=>{
+            if (err){
+                console.log("error: ", err);
+                res.status(500).end("Internal server error.");
+                return;
+            }
+            console.log("connected!");
+            res.status(200).send("Sucess!");
+        })
     } catch (error) {
-        console.log("sql query error.");
+        console.log("sql connect error.", error);
         res.status(500).end("Internal server error.");
     }
 })
