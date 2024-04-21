@@ -36,7 +36,7 @@ function App() {
   // fetch new data, then pass to the child components. 
   useEffect(() => {
     // fetch('https://lchsuan.life:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD'))
-    fetch('http://localhost:3001/api/get_eqs/'+limit+'?mag='+mag+"&time='"+date.format('YYYY-MM-DD')+"'")
+    fetch('https://lchsuan.life:3001/api/get_eqs/'+limit+'?mag='+mag+"&time='"+date.format('YYYY-MM-DD')+"'")
     // fetch('http://localhost:3001/api/eqs/'+mag+'/'+limit+'/'+date.format('YYYY-MM-DD')) // fetch according to the selection options. 
         .then((res) => res.json())
         .then((data) => {
