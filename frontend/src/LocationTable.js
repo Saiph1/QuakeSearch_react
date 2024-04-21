@@ -28,8 +28,8 @@ export default function LocationTable(props) {
         {
             field: "time",
             type: "string",
-            hideable: false,
-            width: 250,
+            hideable: true,
+            width: 200,
             renderHeader: (params) => (
                 <strong>{"Time (UTC+8)"}</strong>
             )
