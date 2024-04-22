@@ -11,21 +11,45 @@ Access the project [here](https://quakesearch.lchsuan.life/)
 1. Install required libraries for both front-end and back-end:
    
     ```
-    cd client
+    cd frondend
     npm install
-    cd ../server
+    cd ../backend
     npm install
     ```
 1. Run node web server and API server in development mode:
     ```
-    cd client
+    cd frontend
     npm start
-    cd ../server
+    cd ../backend
     node index.js
     ```
+1. Configure the .env file with your PostgreSQL connection parameters under this path:
+
+   ```
+   # backend/
+   #  .env  <----Here
+   #  db.js
+   #  index.js
+   #    .
+   #    .
+   #    .
+   ```
+
+with the following content, please replace accordingly:
+
+   ```
+   DB_HOST='localhost'
+   DB_PORT='YOUR PORT'
+   DB_NAME='YOUR_DB_NAME'
+   DB_USER='YOUR_USER_NAME'
+   DB_PASSWORD='YOUR_USER_PASSWORD'
+   
+   PORT = 3001
+   ```
+
 1. Access the project on:
+
    ```
    localhost:3000
    ```
-<h3>🛠&nbsp;Ongoing progress: </h3>
-- Experimenting PosgreSQL with node.js for advance query options.
+
