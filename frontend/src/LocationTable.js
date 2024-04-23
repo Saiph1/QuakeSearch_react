@@ -81,7 +81,8 @@ export default function LocationTable(props) {
             );
         }
         var time_now = new Date();
-        setDate(time_now.toLocaleString());
+        // setDate(time_now.toLocaleString());
+        setDate(props.time_db)
         setLoading(false);
         // console.log(rows);
 

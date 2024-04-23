@@ -22,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
 
 function App() {
-  const [mag, setMag] = useState(4);
+  const [mag, setMag] = useState("");
   const [limit, setLimit] = useState(20);
   const [date, setDate] = useState(dayjs( '2024-01-01'));
   const [tableclicked, setTableclicked] = useState("");
@@ -32,6 +32,7 @@ function App() {
   const [displaySuccessMessage, setDisplaySuccessMessage] = useState(0);
   const [incorrectDate, setIncorrectDate] = useState(false);
   const [open, setOpen] = useState(true);
+  const [db_time, setDb_time] = useState();
 
   // fetch new data, then pass to the child components. 
   useEffect(() => {
@@ -41,6 +42,7 @@ function App() {
         .then((res) => res.json())
         .then((data) => {
           // console.log("http success", data);
+          setDb_time(data.time[0].time)
           setData(data.data[0].event);
         })
     // Cooldown for the submit button to avoid too many query in a short amount of time. 
@@ -150,7 +152,7 @@ function App() {
                     </Box>
                     {displaySuccessMessage >0? (<Alert severity="success" sx={{marginBottom: 1}}>Your request has been submitted.</Alert>):(<></>)}
                     {incorrectDate >0? (<Alert severity="error" sx={{marginBottom: 1}}>Please check your input date!</Alert>):(<></>)}
-                    <LocationTable data={data} loctime={setTableclicked}/>
+                    <LocationTable data={data} loctime={setTableclicked} time_db={db_time}/>
                 </Grid>
             </Grid>
         </Container>

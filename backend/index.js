@@ -106,18 +106,23 @@ app.get('/api/get_eqs/:LIMIT', async (req, res)=>{
         }  
         create_text += (' LIMIT '+ req.params['LIMIT']+ ';'); //Limit needs to be supplied from frontend all the time. (req.params cannot be empty or else api will not receive req)
         console.log(create_text);
-        await db.query(create_text, (err, result)=>{
+        db.query(create_text, async (err, result)=>{
             if (err){
                 console.log("error: ", err);
                 res.status(500).end("Internal server error.");
                 return;
             }
             console.log("Get earthquakes data success!");
-            // console.log(result.rows);。
-            res.status(200).send({Message: "Success.", data: [{event: result.rows}]});
-
-        })
-
+            db.query('SELECT MAX(time) AS time FROM lastupdate;', (err2, result2)=>{
+                if (err){
+                    console.log("error: ", err);
+                    res.status(500).end("Internal server error.");
+                    return;
+                }
+                console.log("Get time data success!");
+                res.status(200).send({Message: "Success.", data: [{event: result.rows}], time: result2.rows});
+            })
+        });
     } catch (error) {
         console.log("sql connect error.", error);
         res.status(500).end("Internal server error.");
