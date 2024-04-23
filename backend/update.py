@@ -3,7 +3,7 @@ import psycopg2
 import requests
 import xmltodict
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -50,8 +50,9 @@ def update_db():
         time_query = "CREATE TABLE IF NOT EXISTS lastupdate (time VARCHAR(255) NOT NULL);" 
         cursor.execute(time_query)
 
+        time_now = datetime.utc() + timedelta(hours=8)
         # First update the time:
-        update_time_query = "INSERT INTO lastupdate (time) VALUES ('" + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "');"
+        update_time_query = "INSERT INTO lastupdate (time) VALUES ('" + time_now.strftime("%Y-%m-%d %H:%M:%S") + "');"
         cursor.execute(update_time_query)
 
         # Secondly, truncate and insert the table.
