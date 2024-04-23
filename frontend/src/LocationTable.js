@@ -71,7 +71,15 @@ export default function LocationTable(props) {
             [...prevRows, createRow(item.time, 
                 item.location, //name
                 parseFloat(item.mag).toFixed(1), //magnitude, but in a consistent format (1 decimal place.)
-                new Date(item.time).toLocaleString("en-US", {timeZone: "Asia/Singapore", hour: "2-digit",}),
+                new Date(item.time).toLocaleString("en-US", {
+                    timeZone: "Asia/Singapore",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                  }),
                 // item.time.replace(/[TZ]/g, ', ').slice(0, -6), // Adjusting the time data into a readable format. 
                 // replacing 'T' 'Z' with ', '.
                 // remove the last four elements of the array, the miliseconds.
