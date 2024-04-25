@@ -40,7 +40,17 @@ export default function MapContainer(props) {
                 item.location, //name
                 item.long, //long
                 item.lat, //lat
-                item.time.replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
+                // item.time.replace(/[TZ]/g, ', ').slice(0, -6), //time, used for key 
+                new Date(item.time).toLocaleString("en-US", {
+                    timeZone: "Asia/Singapore",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour12: false,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                  }),
                 parseFloat(item.mag).toFixed(1),// magnitude used in a display window.
 
             )]);
