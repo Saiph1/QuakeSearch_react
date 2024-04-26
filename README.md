@@ -27,10 +27,10 @@ Access the project [here](https://quakesearch.lchsuan.life/)
 
    ```
    # backend/
-   #  .env  <----Here
-   #  db.js
-   #  index.js
-   #    .
+   #   .env  <----Here
+   #   db.js
+   #   index.js
+   # frontend/
    #    .
    #    .
    ```
