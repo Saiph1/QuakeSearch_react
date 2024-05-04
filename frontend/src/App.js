@@ -1,10 +1,10 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Container } from "@mui/material";
+import { Container, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
-import MapContainer from "./MapContainer";
-import LocationTable from "./LocationTable";
+import MapContainer from "./components/MapContainer";
+import LocationTable from "./components/LocationTable";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -17,10 +17,12 @@ import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
 import dayjs from "dayjs";
+import { tokens } from "./components/theme";
 
 function App() {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [mag, setMag] = useState("");
   const [limit, setLimit] = useState(20);
   const [date, setDate] = useState(dayjs("2024-01-01"));
@@ -158,7 +160,7 @@ function App() {
                 </FormControl>
                 <Button
                   variant="contained"
-                  sx={{ marginLeft: 1 }}
+                  sx={{ marginLeft: 1, backgroundColor: colors.blueAccent[100]}}
                   disabled={cooldown > 0 || incorrectDate}
                   onClick={() => {
                     setSubmit(!submit);
