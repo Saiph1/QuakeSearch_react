@@ -99,9 +99,9 @@ export default function Layout(props) {
             </Box>
             <IconButton onClick={colorMode.toggleColorMode}>
             {theme.palette.mode === "dark" ? (
-              <DarkModeOutlinedIcon />
+              <DarkModeOutlinedIcon/>
             ) : (
-              <LightModeOutlinedIcon />
+              <LightModeOutlinedIcon sx={{ color:"#FDFEFE"}} />
             )}
           </IconButton>
           </Toolbar>
