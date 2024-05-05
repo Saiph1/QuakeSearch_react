@@ -185,11 +185,15 @@ app.get("/api/analytics/linechart/:date", async (req, res) => {
       }
       console.log("Get earthquakes data success!");
       // console.log(result.rows);
-      res.status(200).send({
-            Message: "Success.",
-            data: result.rows,
+      db.query("SELECT COUNT(*) FROM earthquakes WHERE mag >= 5 AND time >= '" +req.params['date']+ "' ;", (err, result2) => {
+        res.status(200).send({
+              Message: "Success.",
+              data: result.rows,
+              mag: result2.rows,
           });
-    });
+      });
+    
+    })
   } catch (error) {
     console.log("sql connect error.", error);
     res.status(500).end("Internal server error.");
