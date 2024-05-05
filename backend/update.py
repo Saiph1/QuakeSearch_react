@@ -17,7 +17,7 @@ DB_PASSWORD=os.getenv('DB_PASSWORD')
 def earthquake_data():
     # Make a request to the API and fetch the data
     print("Fetching data from usgs...")
-    response = requests.get("https://earthquake.usgs.gov/fdsnws/event/1/query?format=xml&minmagnitude=3&starttime=2024-01-01&limit=10")
+    response = requests.get("https://earthquake.usgs.gov/fdsnws/event/1/query?format=xml&minmagnitude=3&starttime=2024-01-01&limit=1000")
     if response.status_code == 200:
         print("Data received from usgs.")
         text_data = response.text.replace('<?xml version="1.0" encoding="UTF-8"?>', '')
@@ -50,7 +50,7 @@ def update_db():
         time_query = "CREATE TABLE IF NOT EXISTS lastupdate (time VARCHAR(255) NOT NULL);" 
         cursor.execute(time_query)
 
-        time_now = datetime.utc() + timedelta(hours=8)
+        time_now = datetime.now() + timedelta(hours=8)
         # First update the time:
         update_time_query = "INSERT INTO lastupdate (time) VALUES ('" + time_now.strftime("%Y-%m-%d %H:%M:%S") + "');"
         cursor.execute(update_time_query)

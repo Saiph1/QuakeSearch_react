@@ -92,7 +92,7 @@ app.get("/api/sql/connection_test", async (req, res) => {
   }
 });
 
-// api get data
+// api get data for map
 app.get("/api/get_eqs/:LIMIT", async (req, res) => {
   try {
     let create_text = `SELECT * FROM earthquakes `;
@@ -135,42 +135,104 @@ app.get("/api/get_eqs/:LIMIT", async (req, res) => {
 });
 
 // =======================================================================================================
-// Method 2: direct query
-app.get("/api/eqs/:mag/:n/:date", (req, res) => {
-  // Handling client side request error.
-  if (
-    req.params["mag"] === null ||
-    req.params["n"] === null ||
-    req.params["date"] === null
-  ) {
-    console.log("Cannot read request parameters!");
-    res.status(400).json({ message: "Request parameter(s) missing." });
+// Data for analytics:
+// Recent Earthquakes
+app.get("/api/analytics/recent", async (req, res) => {
+  try {
+
+    let query_text = `
+      SELECT * FROM earthquakes
+      ORDER BY time DESC 
+      LIMIT 10;
+    `;
+    db.query(query_text, async (err, result) => {
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).end("Internal server error.");
+        return;
+      }
+      console.log("Get earthquakes data success!");
+      // console.log(result.rows);
+      res.status(200).send({
+            Message: "Success.",
+            data: result.rows,
+          });
+    });
+  } catch (error) {
+    console.log("sql connect error.", error);
+    res.status(500).end("Internal server error.");
   }
-  fetch(
-    "https://earthquake.usgs.gov/fdsnws/event/1/query?format=xml&minmagnitude=" +
-      req.params["mag"] +
-      "&limit=" +
-      req.params["n"] +
-      "&starttime=" +
-      req.params["date"],
-  ) // url with custom usage such as showing at most n entries
-    // and earthquake at least with magnitude = mag.
-    .then((res) => res.text())
-    .then((data) => {
-      xml2js.parseString(data, (err, data) => {
-        //convert to JSON for further process.
-        for (let item in data) {
-          // Finds the eventParameters object (there is only one), then send as response (in JSON).
-          res
-            .status(200)
-            .json({ message: "success", data: data[item]["eventParameters"] });
-        }
-      });
-    }) //Error handling.
-    .catch((err) =>
-      res.status(404).json({ error: "Resource not found.", message: err }),
-    );
 });
+
+// Earthquake past 30 days.
+app.get("/api/analytics/linechart/:date", async (req, res) => {
+  try {
+
+    let query_text = `
+      SELECT x, COUNT(*) as y
+      FROM (
+        SELECT mag, SUBSTRING(time, 6, 5) AS x
+        FROM earthquakes
+      )
+      GROUP BY x
+      HAVING x > '`+req.params['date']+
+      `' ORDER BY x ASC;`;
+    db.query(query_text, async (err, result) => {
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).end("Internal server error.");
+        return;
+      }
+      console.log("Get earthquakes data success!");
+      // console.log(result.rows);
+      res.status(200).send({
+            Message: "Success.",
+            data: result.rows,
+          });
+    });
+  } catch (error) {
+    console.log("sql connect error.", error);
+    res.status(500).end("Internal server error.");
+  }
+});
+
+// =======================================================================================================
+// Method 2: direct query
+// app.get("/api/eqs/:mag/:n/:date", (req, res) => {
+//   // Handling client side request error.
+//   if (
+//     req.params["mag"] === null ||
+//     req.params["n"] === null ||
+//     req.params["date"] === null
+//   ) {
+//     console.log("Cannot read request parameters!");
+//     res.status(400).json({ message: "Request parameter(s) missing." });
+//   }
+//   fetch(
+//     "https://earthquake.usgs.gov/fdsnws/event/1/query?format=xml&minmagnitude=" +
+//       req.params["mag"] +
+//       "&limit=" +
+//       req.params["n"] +
+//       "&starttime=" +
+//       req.params["date"],
+//   ) // url with custom usage such as showing at most n entries
+//     // and earthquake at least with magnitude = mag.
+//     .then((res) => res.text())
+//     .then((data) => {
+//       xml2js.parseString(data, (err, data) => {
+//         //convert to JSON for further process.
+//         for (let item in data) {
+//           // Finds the eventParameters object (there is only one), then send as response (in JSON).
+//           res
+//             .status(200)
+//             .json({ message: "success", data: data[item]["eventParameters"] });
+//         }
+//       });
+//     }) //Error handling.
+//     .catch((err) =>
+//       res.status(404).json({ error: "Resource not found.", message: err }),
+//     );
+// });
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
