@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const PORT = process.env.PORT || 3001;
 const db = require("./db").client;
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -111,14 +112,14 @@ app.get("/api/get_eqs/:LIMIT", async (req, res) => {
         res.status(500).end("Internal server error.");
         return;
       }
-      console.log("Get earthquakes data success!");
+      // console.log("Get earthquakes data success!");
       db.query("SELECT MAX(time) AS time FROM lastupdate;", (err2, result2) => {
         if (err) {
           console.log("error: ", err);
           res.status(500).end("Internal server error.");
           return;
         }
-        console.log("Get time data success!");
+        // console.log("Get time data success!");
         res
           .status(200)
           .send({
@@ -151,7 +152,7 @@ app.get("/api/analytics/recent", async (req, res) => {
         res.status(500).end("Internal server error.");
         return;
       }
-      console.log("Get earthquakes data success!");
+      // console.log("Get earthquakes data success!");
       // console.log(result.rows);
       res.status(200).send({
             Message: "Success.",
@@ -164,12 +165,12 @@ app.get("/api/analytics/recent", async (req, res) => {
   }
 });
 
-// Earthquake past 30 days.
+// Earthquake past x days.
 app.get("/api/analytics/linechart/:date", async (req, res) => {
   try {
 
     let query_text = `
-      SELECT x, COUNT(*) as y
+      SELECT x, COUNT(*) AS y
       FROM (
         SELECT mag, SUBSTRING(time, 6, 5) AS x
         FROM earthquakes
@@ -183,7 +184,7 @@ app.get("/api/analytics/linechart/:date", async (req, res) => {
         res.status(500).end("Internal server error.");
         return;
       }
-      console.log("Get earthquakes data success!");
+      // console.log("Get earthquakes data success!");
       // console.log(result.rows);
       db.query("SELECT COUNT(*) FROM earthquakes WHERE mag >= 5 AND time >= '" +req.params['date']+ "' ;", (err, result2) => {
         res.status(200).send({
@@ -200,6 +201,92 @@ app.get("/api/analytics/linechart/:date", async (req, res) => {
   }
 });
 
+// Magnitudes distribution
+app.get("/api/analytics/distribution/:date", async (req, res) => {
+  try {
+    let query_text = `
+      SELECT x AS Date, 
+      SUM(CASE WHEN mag >= 3 AND mag < 3.5 THEN 1 ELSE 0 END) AS "3 ~ 3.5", 
+      SUM(CASE WHEN mag >= 3.5 AND mag < 4 THEN 1 ELSE 0 END) AS "3.5 ~ 4", 
+      SUM(CASE WHEN mag >= 4 AND mag < 4.5 THEN 1 ELSE 0 END) AS "4 ~ 4.5", 
+      SUM(CASE WHEN mag >= 4.5 AND mag < 5 THEN 1 ELSE 0 END) AS "4.5 ~ 5", 
+      SUM(CASE WHEN mag >= 5 THEN 1 ELSE 0 END) AS "> 5"
+      FROM (
+        SELECT mag, SUBSTRING(time, 6, 5) AS x
+        FROM earthquakes
+      )
+      GROUP BY x
+      HAVING x > '`+req.params['date']+`' ORDER BY x ASC;`;
+    db.query(query_text, async (err, result) => {
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).end("Internal server error.");
+        return;
+      }
+      // console.log("Get earthquakes data success!");
+      // console.log(result.rows);
+      res.status(200).send({
+            Message: "Success.",
+            data: result.rows,
+        });
+    })
+  } catch (error) {
+    console.log("sql connect error.", error);
+    res.status(500).end("Internal server error.");
+  }
+});
+
+// Yesterday % data: 
+app.get("/api/analytics/yesterday/:prev", async (req, res) => {
+  try {
+    let query_text = `
+      SELECT x AS Date, COUNT(*) AS total
+      FROM (
+        SELECT SUBSTRING(time, 6, 5) AS x
+        FROM earthquakes
+      )
+      GROUP BY x
+      HAVING x >= '`+req.params['prev']+`' ORDER BY x ASC;`;
+      // console.log(query_text);
+    db.query(query_text, async (err, result) => {
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).end("Internal server error.");
+        return;
+      }
+      // console.log("Get earthquakes data success!");
+      // console.log(result.rows);
+      res.status(200).send({
+            Message: "Success.",
+            data: result.rows,
+        });
+    })
+  } catch (error) {
+    console.log("sql connect error.", error);
+    res.status(500).end("Internal server error.");
+  }
+});
+
+// Getting geo data for the map in analytics.
+const geo = fs.readFileSync('./Geo.sql', 'utf8');
+app.get("/api/analytics/geo", async (req, res) => {
+  try {
+    db.query(geo, async (err, result) => {
+      if (err) {
+        console.log("error: ", err);
+        res.status(500).end("Internal server error.");
+        return;
+      }
+      res.status(200).send({
+            Message: "Success.",
+            data: result.rows,
+        });
+    })
+  } catch (error) {
+    console.log("sql connect error.", error);
+    res.status(500).end("Internal server error.");
+  }
+});
 // =======================================================================================================
 // Method 2: direct query
 // app.get("/api/eqs/:mag/:n/:date", (req, res) => {

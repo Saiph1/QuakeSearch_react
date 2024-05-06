@@ -1,12 +1,34 @@
+import { React, useState, useEffect } from "react";
 import { useTheme } from "@mui/material";
 import { ResponsiveChoropleth } from "@nivo/geo";
-import { geoFeatures } from "./mockGeoFeatures";
+import { geoFeatures } from "./GeoFeatures";
 import { tokens } from "./theme";
-import { mockGeographyData as data } from "./mockData";
 
-const GeographyChart = ({ isDashboard = false }) => {
+export default function GeographyChart(props){
+  const isDashboard = true; 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [data, setData] = useState([]);
+  const [max, setMax] = useState(0);
+
+  useEffect(()=>{
+    let tmp = [];
+    for (let item in props.data[0]){
+      // console.log(item);
+      if (Number(props.data[0][item])>max)
+        setMax(Number(props.data[0][item])); // this is used for scaling for the map. 
+
+      tmp.push({
+        id: item,
+        value: props.data[0][item]
+
+      })
+    }
+    // console.log(props.data);
+    setData(tmp);
+
+  }, [props.data])
+  
   return (
     <ResponsiveChoropleth
       data={data}
@@ -37,10 +59,15 @@ const GeographyChart = ({ isDashboard = false }) => {
             fill: colors.grey[100],
           },
         },
+        tooltip: {
+          container: {
+            color: colors.primary[500],
+          },
+        },
       }}
       features={geoFeatures.features}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-      domain={[0, 1000000]}
+      domain={[0, max]}
       unknownColor="#666666"
       label="properties.name"
       valueFormat=".2s"
@@ -81,5 +108,3 @@ const GeographyChart = ({ isDashboard = false }) => {
     />
   );
 };
-
-export default GeographyChart;

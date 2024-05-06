@@ -1,11 +1,36 @@
+import { React, useState, useEffect } from "react";
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "./theme";
 import { mockBarData as data } from "./mockData";
 
-const BarChart = ({ isDashboard = false }) => {
+export default function BarChart(props){
+  const isDashboard = true; 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [data, setData] = useState([]);
+
+  useEffect(()=>{
+    //   console.log(props.data);
+    let tmp = []
+    for (let i of props.data){
+        tmp.push({
+            day: i.date.replace(/-/g, "/"),
+            "3 ~ 3.5": i['3 ~ 3.5'],
+            // "3 ~ 3.5Color": "hsl(229, 70%, 50%)",
+            "3.5 ~ 4": i['3.5 ~ 4'],
+            // "3.5 ~ 4Color": "hsl(296, 70%, 50%)",
+            "4 ~ 4.5": i['4 ~ 4.5'],
+            // "4.5 ~ 5Color": "hsl(97, 70%, 50%)",
+            "4.5 ~ 5": i['4.5 ~ 5'],
+            " > 5": i['> 5'],
+            // ">5Color": "hsl(340, 70%, 50%)",
+        })
+        // console.log(tmp);
+    }
+    setData(tmp);
+
+  }, [props.data])
 
   return (
     <ResponsiveBar
@@ -38,9 +63,14 @@ const BarChart = ({ isDashboard = false }) => {
             fill: colors.grey[100],
           },
         },
+        tooltip: {
+            container: {
+              color: colors.primary[500],
+            },
+          },
       }}
-      keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]}
-      indexBy="country"
+      keys={["3 ~ 3.5", "3.5 ~ 4", "4 ~ 4.5", "4.5 ~ 5", " > 5"]}
+      indexBy="day"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: "linear" }}
@@ -76,7 +106,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "country", // changed
+        legend: isDashboard ? undefined : "Date", // changed
         legendPosition: "middle",
         legendOffset: 32,
       }}
@@ -84,7 +114,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "food", // changed
+        legend: isDashboard ? undefined : "", // changed
         legendPosition: "middle",
         legendOffset: -40,
       }}
@@ -126,5 +156,3 @@ const BarChart = ({ isDashboard = false }) => {
     />
   );
 };
-
-export default BarChart;
