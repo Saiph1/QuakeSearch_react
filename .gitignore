@@ -7,7 +7,6 @@ backend/.*
 frontend/build
 server/cert
 *.zip
-package-lock.*
 # dependencies
 node_modules
 frontend/node_modules
