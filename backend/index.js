@@ -186,7 +186,7 @@ app.get("/api/analytics/linechart/:date", async (req, res) => {
       }
       // console.log("Get earthquakes data success!");
       // console.log(result.rows);
-      db.query("SELECT COUNT(*) FROM earthquakes WHERE mag >= 5 AND time >= '" +req.params['date']+ "' ;", (err, result2) => {
+      db.query("SELECT COUNT(*) FROM earthquakes WHERE mag >= 5 AND time >= '2024-" +req.params['date']+ "' ;", (err, result2) => {
         res.status(200).send({
               Message: "Success.",
               data: result.rows,

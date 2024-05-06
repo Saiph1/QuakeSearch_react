@@ -129,7 +129,7 @@ export default function Analytics(props) {
       >
         <StatBox
           title="Last Week"
-          subtitle={"Activities were " + (total_14-total_7>total_7?"down by":"up by")}
+          subtitle={"Activities " + (total_14-total_7>total_7?"down by":"up by")}
           progress={Math.abs((1 - (total_14-total_7)/total_7)).toString()}
                 
           increase={total_14-total_7>total_7?((total_14-total_7)/total_7).toFixed(2)*100-100+"%↓"
@@ -149,7 +149,7 @@ export default function Analytics(props) {
       >
         <StatBox
           title="Yesterday"
-          subtitle={"Activities were "+ (yesterday>=0?"up by ":"down by ")}
+          subtitle={"Activities "+ (yesterday>=0?"up by ":"down by ")}
           progress={Math.abs(yesterday/100)}
                 
           increase={Math.abs(yesterday).toFixed(1)+(yesterday>=0?"%↑":"%↓")}

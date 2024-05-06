@@ -3,7 +3,6 @@ import { React, useState, useEffect } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "./theme";
-// import { mockLineData as data } from "./mockData";
 
 export default function LineChart(props) {
   const theme = useTheme();
