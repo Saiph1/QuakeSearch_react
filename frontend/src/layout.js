@@ -30,7 +30,7 @@ export default function Layout(props) {
 
           <Toolbar disableGutters >
             <TravelExploreIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+              sx={{ display: "flex", mr: 1 }}
             />
 
             <Typography
