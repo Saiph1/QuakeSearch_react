@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
 // import {GoogleMap, LoadScript, AdvancedMarker , InfoWindow} from '@react-google-maps/api';
+import { Typography } from "@mui/material";
 import {
   APIProvider,
   Map,
@@ -7,10 +8,11 @@ import {
   InfoWindow,
 } from "@vis.gl/react-google-maps";
 
+
 export default function MapContainer(props) {
   const [locations, setLocations] = useState([]);
   const [showing, setShowing] = useState();
-  const [tableshow, setTableshow] = useState(props.findlocbyitstime);
+  const [tableshow, setTableshow] = useState(props.findlocbyitstime); 
 
   function createLocation(name, long, lat, time, mag) {
     return { name: name, long: long, lat: lat, time: time, mag: mag };
@@ -70,43 +72,47 @@ export default function MapContainer(props) {
 
   return (
     <APIProvider apiKey={"AIzaSyAbZ9dC0gMiRjip7f6SHMhgVZZK15JJJcc"}>
-      <Map
-        style={mapStyles}
-        defaultZoom={2}
-        defaultCenter={{ lat: 23.7, lng: 121 }}
-      >
-        {locations.map((file, index) => (
-          <div key={locations[index] + index}>
-            {(showing === index || tableshow === locations[index].time) && ( // conditional rendering when clicked on a particular mark, render accordingly.
-              <InfoWindow
-                key={locations[index]}
+        <Map
+          style={mapStyles}
+          defaultZoom={2}
+          defaultCenter={{ lat: 23.7, lng: 121 }}
+        >
+          {locations.map((file, index) => (
+            <div key={locations[index] + index}>
+              {(showing === index || tableshow === locations[index].time) && ( // conditional rendering when clicked on a particular mark, render accordingly.
+                <InfoWindow
+                  key={locations[index]}
+                  position={{
+                    lat: Number(locations[index].lat),
+                    lng: Number(locations[index].long),
+                  }}
+                  onCloseClick={() => setShowing()}
+                  sx={{color: "#17202A"}}
+                >
+                  <Typography color="primary">
+                    Magnitude:&nbsp;
+                    {locations[index].mag}
+                    <br></br>
+                    {locations[index].name}
+                  </Typography>
+                  
+                </InfoWindow>
+              )}
+
+              <Marker
+                key={index}
+                onClick={() => {
+                  setShowing(index);
+                  setTableshow();
+                }}
                 position={{
                   lat: Number(locations[index].lat),
                   lng: Number(locations[index].long),
                 }}
-                onCloseClick={() => setShowing()}
-              >
-                Magnitude:&nbsp;
-                {locations[index].mag}
-                <br></br>
-                {locations[index].name}
-              </InfoWindow>
-            )}
-
-            <Marker
-              key={index}
-              onClick={() => {
-                setShowing(index);
-                setTableshow();
-              }}
-              position={{
-                lat: Number(locations[index].lat),
-                lng: Number(locations[index].long),
-              }}
-            ></Marker>
-          </div>
-        ))}
-      </Map>
+              ></Marker>
+            </div>
+          ))}
+        </Map>
     </APIProvider>
   );
 }
