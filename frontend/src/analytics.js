@@ -23,7 +23,7 @@ export default function Analytics(props) {
 
     useEffect(()=>{
         // get recent data
-        fetch("http://localhost:3001/api/analytics/recent")
+        fetch("https://lchsuan.life:3001/api/analytics/recent")
         .then((res) => res.json())
         .then((data)=> {
             // console.log(data.data);
@@ -39,7 +39,7 @@ export default function Analytics(props) {
         Date_before_2.setDate(Date_before_2.getDate() - 2);
 
         // get linechart data.
-        fetch("http://localhost:3001/api/analytics/linechart/"+Date_before_14.toISOString().slice(5, 10))
+        fetch("https://lchsuan.life:3001/api/analytics/linechart/"+Date_before_14.toISOString().slice(5, 10))
         .then((res) => res.json())
         .then((data)=> {
             data.data[data.data.length -1].x ='Today';
@@ -54,10 +54,10 @@ export default function Analytics(props) {
                 sum+= Number(data.data[i].y);
             }
             setTotal_14(sum);
-            setMag5(data.mag[0].count)
+            setMag5(data.mag[0].count);
         });
         // Get total numbers of earthquake in 7 days.
-        fetch("http://localhost:3001/api/analytics/linechart/"+Date_before_7.toISOString().slice(5, 10))
+        fetch("https://lchsuan.life:3001/api/analytics/linechart/"+Date_before_7.toISOString().slice(5, 10))
         .then((res) => res.json())
         .then((data)=> {
             let sum = 0;
@@ -67,25 +67,26 @@ export default function Analytics(props) {
             setTotal_7(sum);
         });
         // Get barchart data.
-        fetch("http://localhost:3001/api/analytics/distribution/"+Date_before_7.toISOString().slice(5, 10))
+        fetch("https://lchsuan.life:3001/api/analytics/distribution/"+Date_before_7.toISOString().slice(5, 10))
         .then((res) => res.json())
         .then((data)=> {
             setBardata(data.data);
         });
 
         // Get yesterday data:
-        fetch("http://localhost:3001/api/analytics/yesterday/"+Date_before_2.toISOString().slice(5, 10))
+        fetch("https://lchsuan.life:3001/api/analytics/yesterday/"+Date_before_2.toISOString().slice(5, 10))
         .then((res) => res.json())
         .then((data)=> {
             // console.log(((data.data[1].total-data.data[0].total)*100/data.data[0].total).toFixed(2));
 
+            // console.log(data.data);
             // Percentage increase/decrease.
             setyesterday(((data.data[1].total-data.data[0].total)*100/data.data[0].total).toFixed(2));
 
         });
 
         // Get geo data for map:
-        fetch("http://localhost:3001/api/analytics/geo")
+        fetch("https://lchsuan.life:3001/api/analytics/geo")
         .then((res) => res.json())
         .then((data)=> {
             // console.log(((data.data[1].total-data.data[0].total)*100/data.data[0].total).toFixed(2));
@@ -201,9 +202,9 @@ export default function Analytics(props) {
         <StatBox
           title="Percentage of the earthquakes"
           subtitle={"Where magnitudes larger than 5, in the last two weeks"}
-          progress={Math.abs(((total_14-mag5)/total_14)).toString()}
+          progress={Math.abs(((mag5)/total_14)).toString()}
                 
-          increase={Math.abs(((total_14-mag5)/total_14).toFixed(2)*100).toString()+"%"}
+          increase={Math.abs(((mag5)/total_14).toFixed(2)*100).toString()+"%"}
           icon={
             <Looks5Icon/>
           }
