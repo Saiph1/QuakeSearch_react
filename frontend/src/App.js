@@ -1,6 +1,6 @@
 import "./App.css";
 import { React, useState, useEffect } from "react";
-import { Container, useTheme } from "@mui/material";
+import { Typography, Container, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import MapContainer from "./components/MapContainer";
@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import dayjs from "dayjs";
 import { tokens } from "./components/theme";
+import { useMediaQuery } from '@material-ui/core';
 
 function App() {
   const theme = useTheme();
@@ -34,6 +35,7 @@ function App() {
   const [incorrectDate, setIncorrectDate] = useState(false);
   const [open, setOpen] = useState(true);
   const [db_time, setDb_time] = useState();
+  const isPhoneScreen = useMediaQuery('(max-width:600px)');
 
   // fetch new data, then pass to the child components.
   useEffect(() => {
@@ -101,45 +103,66 @@ function App() {
                   alignItems: "left",
                   justifyContent: "left",
                   width: "100%",
-                  marginBottom: 1,
+                  marginBottom: 1, 
+                  flexWrap: isPhoneScreen? 'wrap':''
                 }}
               >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Starting date"
-                    value={date}
-                    onChange={(newValue) => {
-                      setDate(newValue);
-                      setIncorrectDate(!newValue.isBefore(dayjs(new Date()))); // check whther the input date is before "today".
-                      // This will solve the issue as Date.toLocaleString() would result in dayjs invalid date format.
-                    }}
-                  />
-                </LocalizationProvider>
-                <FormControl sx={{ width: "20%", marginLeft: 1 }}>
-                  <InputLabel>Magnitude</InputLabel>
-                  <Select
-                    labelId="select_magnitude"
-                    id="select_magnitude"
-                    value={mag}
-                    label="Magnitude"
-                    onChange={(event) => {
-                      setMag(event.target.value);
-                    }}
-                  >
-                    <MenuItem value={""}>None</MenuItem>
-                    <MenuItem value={3}>3 or above</MenuItem>
-                    <MenuItem value={4}>4 or above</MenuItem>
-                    <MenuItem value={5}>5 or above</MenuItem>
-                    <MenuItem value={6}>6 or above</MenuItem>
-                    <MenuItem value={7}>7 or above</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl sx={{ width: "15%", marginLeft: 1 }}>
+                <Box
+                  width={isPhoneScreen?"100%":"30%"}
+                  sx={{marginBottom: isPhoneScreen?1:0}}
+                  justifyContent="left"
+                  display="flex"
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs} >
+                    <DatePicker
+                      label="Starting date"
+                      value={date}
+                      sx={{ width: "100%"}}
+                      onChange={(newValue) => {
+                        setDate(newValue);
+                        setIncorrectDate(!newValue.isBefore(dayjs(new Date()))); // check whther the input date is before "today".
+                        // This will solve the issue as Date.toLocaleString() would result in dayjs invalid date format.
+                      }}
+                    />
+                  </LocalizationProvider>
+                </Box>
+                <Box
+                  width={isPhoneScreen?"100%":"30%"}
+                  justifyContent="left"
+                  display="flex"
+                >
+                  <FormControl sx={{ width: "100%", marginLeft: isPhoneScreen?0:1, marginBottom: isPhoneScreen?1:0 }}>
+                    <InputLabel>Magnitude</InputLabel>
+                    <Select
+                      labelId="select_magnitude"
+                      id="select_magnitude"
+                      value={mag}
+                      label="Magnitude"
+                      onChange={(event) => {
+                        setMag(event.target.value);
+                      }}
+                    >
+                      <MenuItem value={""} justifyContent="center">None</MenuItem>
+                      <MenuItem value={3}>3 or above</MenuItem>
+                      <MenuItem value={4}>4 or above</MenuItem>
+                      <MenuItem value={5}>5 or above</MenuItem>
+                      <MenuItem value={6}>6 or above</MenuItem>
+                      <MenuItem value={7}>7 or above</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <Box
+                  width={isPhoneScreen?"100%":"30%"}
+                  justifyContent="left"
+                  display="flex"
+                >
+                <FormControl sx={{ width: "100%", marginLeft: isPhoneScreen?0:1, marginBottom: isPhoneScreen?1:0}}>
                   <InputLabel>Max. results</InputLabel>
                   <Select
                     labelId="select_results"
                     id="select_results"
                     // defaultValue={0}
+                    
                     value={limit}
                     label="Magnitude"
                     onChange={(event) => {
@@ -158,9 +181,15 @@ function App() {
                     <MenuItem value={10000}> All data</MenuItem>
                   </Select>
                 </FormControl>
+                </Box>
+                <Box
+                  width={isPhoneScreen?"100%":"10%"}
+                  justifyContent="left"
+                  display="flex"
+                >
                 <Button
                   variant="contained"
-                  sx={{ marginLeft: 1, backgroundColor: colors.blueAccent[100]}}
+                  sx={{ width: "100%", marginLeft: isPhoneScreen?0:1, backgroundColor: colors.blueAccent[100]}}
                   disabled={cooldown > 0 || incorrectDate}
                   onClick={() => {
                     setSubmit(!submit);
@@ -171,6 +200,7 @@ function App() {
                 >
                   Submit
                 </Button>
+                </Box>
               </Box>
               {displaySuccessMessage > 0 ? (
                 <Alert severity="success" sx={{ marginBottom: 1 }}>
@@ -190,6 +220,7 @@ function App() {
                 data={data}
                 loctime={setTableclicked}
                 time_db={db_time}
+                phone={isPhoneScreen}
               />
             </Grid>
           </Grid>

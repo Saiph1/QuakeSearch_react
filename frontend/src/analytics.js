@@ -8,8 +8,10 @@ import BarChart from "./components/barchart";
 import TodayIcon from '@material-ui/icons/Today';
 import Looks5Icon from '@material-ui/icons/Looks5';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import { useMediaQuery } from '@material-ui/core';
 
 export default function Analytics(props) {
+    const isPhoneScreen = useMediaQuery('(max-width:700px)');
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [total_14, setTotal_14] = useState(0); // total amount of earthquake in the past 14 days.
@@ -120,7 +122,7 @@ export default function Analytics(props) {
         >
       {/* ROW 1 */}
       <Box
-        gridColumn="span 2"
+        gridColumn={isPhoneScreen?"span 12":"span 2"}
         gridRow="span 1"
         backgroundColor={colors.primary[400]}
         display="flex"
@@ -140,7 +142,7 @@ export default function Analytics(props) {
         />
       </Box> 
       <Box
-        gridColumn="span 2"
+        gridColumn={isPhoneScreen?"span 12":"span 2"}
         gridRow="span 1"
         backgroundColor={colors.primary[400]}
         display="flex"
@@ -159,7 +161,7 @@ export default function Analytics(props) {
         />
       </Box>
       <Box
-        gridColumn="span 5"
+        gridColumn={isPhoneScreen?"span 12":"span 5"}
         gridRow="span 2"
         backgroundColor={colors.primary[400]}
       >
@@ -175,7 +177,7 @@ export default function Analytics(props) {
         </Box>
       </Box>
       <Box
-        gridColumn="span 3"
+        gridColumn={isPhoneScreen?"span 12":"span 3"}
         gridRow="span 2"
         backgroundColor={colors.primary[400]}
         padding="30px"
@@ -192,7 +194,7 @@ export default function Analytics(props) {
         </Box>
       </Box>
       <Box
-        gridColumn="span 4"
+        gridColumn={isPhoneScreen?"span 12":"span 4"}
         gridRow="span 1"
         backgroundColor={colors.primary[400]}
         display="flex"
@@ -216,7 +218,7 @@ export default function Analytics(props) {
 
       {/* ROW 2 */}
       <Box
-        gridColumn="span 8"
+        gridColumn={isPhoneScreen?"span 12":"span 8"}
         gridRow="span 2"
         backgroundColor={colors.primary[400]}
       >
@@ -249,7 +251,7 @@ export default function Analytics(props) {
         </Box>
       </Box>
       <Box
-        gridColumn="span 4"
+        gridColumn={isPhoneScreen?"span 12":"span 4"}
         gridRow="span 2"
         backgroundColor={colors.primary[400]}
         overflow="auto"

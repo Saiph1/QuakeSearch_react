@@ -5,6 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import LinearProgress from "@mui/material/LinearProgress";
 import TextField from "@mui/material/TextField";
 
+
 export default function LocationTable(props) {
   const [rows, setRows] = useState([
     {
@@ -29,15 +30,15 @@ export default function LocationTable(props) {
       field: "time",
       type: "string",
       hideable: true,
-      width: 200,
-      renderHeader: (params) => <strong>{"Time (UTC+8)"}</strong>,
+      width: props.phone? 90: 200,
+      renderHeader: (params) => <strong>{props.phone? "Time":"Time (UTC+8)"}</strong>,
     },
     {
-      field: "magnitude",
+      field: "magnitude" ,
       type: "number",
       hideable: false,
-      width: 100,
-      renderHeader: (params) => <strong>{"Magnitude"}</strong>,
+      width: props.phone? 50:100,
+      renderHeader: (params) => <strong>{props.phone? "Mag.":"Magnitude"}</strong>,
     },
   ];
 
