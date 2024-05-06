@@ -9,22 +9,26 @@ export default function GeographyChart(props){
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [data, setData] = useState([]);
-  const [max, setMax] = useState(0);
+  const [domainmax, setDomainmax] = useState(0);
 
   useEffect(()=>{
     let tmp = [];
     for (let item in props.data[0]){
-      // console.log(item);
-      if (Number(props.data[0][item])>max)
-        setMax(Number(props.data[0][item])); // this is used for scaling for the map. 
-
       tmp.push({
         id: item,
         value: props.data[0][item]
-
       })
+      // console.log(Number(props.data[0][item]));
+      // setDomainmax(Math.max(Number(props.data[0][item]), domainmax)); // this is used for scaling for the map. 
     }
-    // console.log(props.data);
+
+    var sum = 0;
+    tmp.forEach(function(obj) {
+        sum += Number(obj.value);
+    });
+    var average = sum / tmp.length;
+    setDomainmax(average);
+    console.log(average);
     setData(tmp);
 
   }, [props.data])
@@ -67,7 +71,7 @@ export default function GeographyChart(props){
       }}
       features={geoFeatures.features}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-      domain={[0, max]}
+      domain={[0, domainmax]}
       unknownColor="#666666"
       label="properties.name"
       valueFormat=".2s"
