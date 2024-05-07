@@ -11,7 +11,7 @@ import TimelineIcon from '@material-ui/icons/Timeline';
 import { useMediaQuery } from '@material-ui/core';
 
 export default function Analytics(props) {
-    const isPhoneScreen = useMediaQuery('(max-width:700px)');
+    const isPhoneScreen = useMediaQuery('(max-width:800px)');
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [total_14, setTotal_14] = useState(0); // total amount of earthquake in the past 14 days.
