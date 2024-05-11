@@ -91,7 +91,6 @@ export default function Analytics(props) {
         fetch("https://lchsuan.life:3001/api/analytics/geo")
         .then((res) => res.json())
         .then((data)=> {
-            // console.log(((data.data[1].total-data.data[0].total)*100/data.data[0].total).toFixed(2));
             setGeodata(data.data);
         });
 
