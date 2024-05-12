@@ -4,26 +4,25 @@ import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoFeatures } from "./GeoFeatures";
 import { tokens } from "./theme";
 
-export default function GeographyChart(props){
-  const isDashboard = true; 
+export default function GeographyChart(props) {
+  const isDashboard = true;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [data, setData] = useState([]);
   const [domainmax, setDomainmax] = useState(0);
 
-  useEffect(()=>{
+  useEffect(() => {
     let tmp = [];
-    // Store the geo data in the right format. 
-    for (let item in props.data[0]){
+    // Store the geo data in the right format.
+    for (let item in props.data[0]) {
       tmp.push({
         id: item,
-        value: props.data[0][item]
-      })
+        value: props.data[0][item],
+      });
     }
     setData(tmp);
+  }, [props.data]);
 
-  }, [props.data])
-  
   return (
     <ResponsiveChoropleth
       data={data}
@@ -102,4 +101,4 @@ export default function GeographyChart(props){
       }
     />
   );
-};
+}

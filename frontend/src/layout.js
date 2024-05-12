@@ -13,7 +13,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { useNavigate } from "react-router-dom";
 import { useTheme, IconButton } from "@mui/material";
 import { ColorModeContext, tokens } from "./components/theme";
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from "@material-ui/core";
 
 const pages = ["home", "analytics", "about"];
 
@@ -22,53 +22,51 @@ export default function Layout(props) {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  const isPhoneScreen = useMediaQuery('(max-width:600px)');
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
   return (
-      <AppBar position="static" sx={{ marginBottom: 1, backgroundColor: colors.blueAccent[100]}}>
-        <Container maxWidth="xl" >
+    <AppBar
+      position="static"
+      sx={{ marginBottom: 1, backgroundColor: colors.blueAccent[100] }}
+    >
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <TravelExploreIcon sx={{ display: "flex", mr: 1 }} />
 
-          <Toolbar disableGutters >
-            <TravelExploreIcon
-              sx={{ display: "flex", mr: 1 }}
-            />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              display: isPhoneScreen ? "none" : "flex",
+              fontFamily: "Roboto",
+              fontWeight: 200,
+              letterSpacing: ".1rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            QuakeSearch
+          </Typography>
 
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <Menu
+              id="menu-appbar"
               sx={{
-                mr: 2,
-                display: isPhoneScreen?"none":"flex",
-                fontFamily: "Roboto",
-                fontWeight: 200,
-                letterSpacing: ".1rem",
-                color: "inherit",
-                textDecoration: "none",
+                display: { xs: "block", md: "none" },
               }}
+              open={false}
             >
-              QuakeSearch
-            </Typography>
+              {pages.map((page) => (
+                <MenuItem key={page}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
 
-
-
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <Menu
-                id="menu-appbar"
-                sx={{
-                  display: { xs: "block", md: "none" },
-                }}
-                open={false}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-
-            {/* <Typography
+          {/* <Typography
               variant="h5"
               // onClick={()=>navigate('/')}
               noWrap
@@ -87,39 +85,33 @@ export default function Layout(props) {
               QuakeSearch
             </Typography> */}
 
+          <Box sx={{ flexGrow: 1, display: "flex" }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={() => navigate("/" + (page === "home" ? "" : page))} //Navigate back to the index or the about page.
+                sx={{
+                  my: 0,
+                  color: "white",
+                  display: "block",
+                  fontFamily: "Roboto",
+                  fontWeight: 300,
+                }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
 
-
-            <Box sx={{ flexGrow: 1, display: "flex" }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => navigate("/" + (page === "home" ? "" : page))} //Navigate back to the index or the about page.
-                  sx={{
-                    my: 0,
-                    color: "white",
-                    display: "block",
-                    fontFamily: "Roboto",
-                    fontWeight: 300,
-                  }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
-
-
-            <IconButton onClick={colorMode.toggleColorMode}>
+          <IconButton onClick={colorMode.toggleColorMode}>
             {theme.palette.mode === "dark" ? (
-              <DarkModeOutlinedIcon/>
+              <DarkModeOutlinedIcon />
             ) : (
-              <LightModeOutlinedIcon sx={{ color:"#FDFEFE"}} />
+              <LightModeOutlinedIcon sx={{ color: "#FDFEFE" }} />
             )}
           </IconButton>
-
-
-
-          </Toolbar>
-        </Container>
-      </AppBar>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }

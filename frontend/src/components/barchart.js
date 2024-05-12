@@ -3,33 +3,32 @@ import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "./theme";
 
-export default function BarChart(props){
-  const isDashboard = true; 
+export default function BarChart(props) {
+  const isDashboard = true;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [data, setData] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     //   console.log(props.data);
-    let tmp = []
-    for (let i of props.data){
-        tmp.push({
-            day: i.date.replace(/-/g, "/"),
-            "3 ~ 3.5": i['3 ~ 3.5'],
-            // "3 ~ 3.5Color": "hsl(229, 70%, 50%)",
-            "3.5 ~ 4": i['3.5 ~ 4'],
-            // "3.5 ~ 4Color": "hsl(296, 70%, 50%)",
-            "4 ~ 4.5": i['4 ~ 4.5'],
-            // "4.5 ~ 5Color": "hsl(97, 70%, 50%)",
-            "4.5 ~ 5": i['4.5 ~ 5'],
-            " > 5": i['> 5'],
-            // ">5Color": "hsl(340, 70%, 50%)",
-        })
-        // console.log(tmp);
+    let tmp = [];
+    for (let i of props.data) {
+      tmp.push({
+        day: i.date.replace(/-/g, "/"),
+        "3 ~ 3.5": i["3 ~ 3.5"],
+        // "3 ~ 3.5Color": "hsl(229, 70%, 50%)",
+        "3.5 ~ 4": i["3.5 ~ 4"],
+        // "3.5 ~ 4Color": "hsl(296, 70%, 50%)",
+        "4 ~ 4.5": i["4 ~ 4.5"],
+        // "4.5 ~ 5Color": "hsl(97, 70%, 50%)",
+        "4.5 ~ 5": i["4.5 ~ 5"],
+        " > 5": i["> 5"],
+        // ">5Color": "hsl(340, 70%, 50%)",
+      });
+      // console.log(tmp);
     }
     setData(tmp);
-
-  }, [props.data])
+  }, [props.data]);
 
   return (
     <ResponsiveBar
@@ -63,10 +62,10 @@ export default function BarChart(props){
           },
         },
         tooltip: {
-            container: {
-              color: colors.primary[500],
-            },
+          container: {
+            color: colors.primary[500],
           },
+        },
       }}
       keys={["3 ~ 3.5", "3.5 ~ 4", "4 ~ 4.5", "4.5 ~ 5", " > 5"]}
       indexBy="day"
@@ -154,4 +153,4 @@ export default function BarChart(props){
       }}
     />
   );
-};
+}

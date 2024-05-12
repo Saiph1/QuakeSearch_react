@@ -1,4 +1,3 @@
-
 import { React, useState, useEffect } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
@@ -8,17 +7,17 @@ export default function LineChart(props) {
   const theme = useTheme();
   const isDashboard = true;
   const colors = tokens(theme.palette.mode);
-  const [data, setData] = useState([{
-    id: "Loading..",
-    color: tokens("dark").greenAccent[500],
-    data: []
-  }]);
+  const [data, setData] = useState([
+    {
+      id: "Loading..",
+      color: tokens("dark").greenAccent[500],
+      data: [],
+    },
+  ]);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     setData(props.data);
-
-  }, [props.data])
+  }, [props.data]);
 
   return (
     <ResponsiveLine
@@ -125,4 +124,4 @@ export default function LineChart(props) {
       ]}
     />
   );
-};
+}

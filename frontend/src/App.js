@@ -19,7 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import dayjs from "dayjs";
 import { tokens } from "./components/theme";
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from "@material-ui/core";
 
 function App() {
   const theme = useTheme();
@@ -35,7 +35,7 @@ function App() {
   const [incorrectDate, setIncorrectDate] = useState(false);
   const [open, setOpen] = useState(true);
   const [db_time, setDb_time] = useState();
-  const isPhoneScreen = useMediaQuery('(max-width:600px)');
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
   // fetch new data, then pass to the child components.
   useEffect(() => {
@@ -103,21 +103,21 @@ function App() {
                   alignItems: "left",
                   justifyContent: "left",
                   width: "100%",
-                  marginBottom: 1, 
-                  flexWrap: isPhoneScreen? 'wrap':''
+                  marginBottom: 1,
+                  flexWrap: isPhoneScreen ? "wrap" : "",
                 }}
               >
                 <Box
-                  width={isPhoneScreen?"100%":"30%"}
-                  sx={{marginBottom: isPhoneScreen?1:0}}
+                  width={isPhoneScreen ? "100%" : "30%"}
+                  sx={{ marginBottom: isPhoneScreen ? 1 : 0 }}
                   justifyContent="left"
                   display="flex"
                 >
-                  <LocalizationProvider dateAdapter={AdapterDayjs} >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Starting date"
                       value={date}
-                      sx={{ width: "100%"}}
+                      sx={{ width: "100%" }}
                       onChange={(newValue) => {
                         setDate(newValue);
                         setIncorrectDate(!newValue.isBefore(dayjs(new Date()))); // check whther the input date is before "today".
@@ -127,11 +127,17 @@ function App() {
                   </LocalizationProvider>
                 </Box>
                 <Box
-                  width={isPhoneScreen?"100%":"30%"}
+                  width={isPhoneScreen ? "100%" : "30%"}
                   justifyContent="left"
                   display="flex"
                 >
-                  <FormControl sx={{ width: "100%", marginLeft: isPhoneScreen?0:1, marginBottom: isPhoneScreen?1:0 }}>
+                  <FormControl
+                    sx={{
+                      width: "100%",
+                      marginLeft: isPhoneScreen ? 0 : 1,
+                      marginBottom: isPhoneScreen ? 1 : 0,
+                    }}
+                  >
                     <InputLabel>Magnitude</InputLabel>
                     <Select
                       labelId="select_magnitude"
@@ -142,7 +148,9 @@ function App() {
                         setMag(event.target.value);
                       }}
                     >
-                      <MenuItem value={""} justifyContent="center">None</MenuItem>
+                      <MenuItem value={""} justifyContent="center">
+                        None
+                      </MenuItem>
                       <MenuItem value={3}>3 or above</MenuItem>
                       <MenuItem value={4}>4 or above</MenuItem>
                       <MenuItem value={5}>5 or above</MenuItem>
@@ -152,54 +160,64 @@ function App() {
                   </FormControl>
                 </Box>
                 <Box
-                  width={isPhoneScreen?"100%":"30%"}
+                  width={isPhoneScreen ? "100%" : "30%"}
                   justifyContent="left"
                   display="flex"
                 >
-                <FormControl sx={{ width: "100%", marginLeft: isPhoneScreen?0:1, marginBottom: isPhoneScreen?1:0}}>
-                  <InputLabel>Max. results</InputLabel>
-                  <Select
-                    labelId="select_results"
-                    id="select_results"
-                    // defaultValue={0}
-                    
-                    value={limit}
-                    label="Magnitude"
-                    onChange={(event) => {
-                      setLimit(event.target.value);
+                  <FormControl
+                    sx={{
+                      width: "100%",
+                      marginLeft: isPhoneScreen ? 0 : 1,
+                      marginBottom: isPhoneScreen ? 1 : 0,
                     }}
                   >
-                    <MenuItem value={20}>20</MenuItem>
-                    <MenuItem value={50}>50</MenuItem>
-                    <MenuItem value={100}>100</MenuItem>
-                    <MenuItem value={200}>200</MenuItem>
-                    <MenuItem value={300}>300</MenuItem>
-                    <MenuItem value={500}>500</MenuItem>
-                    <MenuItem value={1000}>1000</MenuItem>
-                    <MenuItem value={2000}>2000</MenuItem>
-                    <MenuItem value={3000}>3000</MenuItem>
-                    <MenuItem value={10000}> All data</MenuItem>
-                  </Select>
-                </FormControl>
+                    <InputLabel>Max. results</InputLabel>
+                    <Select
+                      labelId="select_results"
+                      id="select_results"
+                      // defaultValue={0}
+
+                      value={limit}
+                      label="Magnitude"
+                      onChange={(event) => {
+                        setLimit(event.target.value);
+                      }}
+                    >
+                      <MenuItem value={20}>20</MenuItem>
+                      <MenuItem value={50}>50</MenuItem>
+                      <MenuItem value={100}>100</MenuItem>
+                      <MenuItem value={200}>200</MenuItem>
+                      <MenuItem value={300}>300</MenuItem>
+                      <MenuItem value={500}>500</MenuItem>
+                      <MenuItem value={1000}>1000</MenuItem>
+                      <MenuItem value={2000}>2000</MenuItem>
+                      <MenuItem value={3000}>3000</MenuItem>
+                      <MenuItem value={10000}> All data</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Box>
                 <Box
-                  width={isPhoneScreen?"100%":"10%"}
+                  width={isPhoneScreen ? "100%" : "10%"}
                   justifyContent="left"
                   display="flex"
                 >
-                <Button
-                  variant="contained"
-                  sx={{ width: "100%", marginLeft: isPhoneScreen?0:1, backgroundColor: colors.blueAccent[100]}}
-                  disabled={cooldown > 0 || incorrectDate}
-                  onClick={() => {
-                    setSubmit(!submit);
-                    setDisplaySuccessMessage(5);
-                    setTableclicked("");
-                    setCooldown(5);
-                  }}
-                >
-                  Submit
-                </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: "100%",
+                      marginLeft: isPhoneScreen ? 0 : 1,
+                      backgroundColor: colors.blueAccent[100],
+                    }}
+                    disabled={cooldown > 0 || incorrectDate}
+                    onClick={() => {
+                      setSubmit(!submit);
+                      setDisplaySuccessMessage(5);
+                      setTableclicked("");
+                      setCooldown(5);
+                    }}
+                  >
+                    Submit
+                  </Button>
                 </Box>
               </Box>
               {displaySuccessMessage > 0 ? (
